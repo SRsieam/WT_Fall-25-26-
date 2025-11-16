@@ -109,17 +109,17 @@
       }
 
       if (!email.includes("@")) {
-        errorDiv.innerHTML = "Email must contain '@'.";
+        errorDiv.innerHTML = "Email must contain '@'";
         return false;
       }
 
       if (isNaN(phone)) {
-        errorDiv.innerHTML = "Phone number must be numeric.";
+        errorDiv.innerHTML = "Phone number must be numeric";
         return false;
       }
 
       if (password !== confirmPassword) {
-        errorDiv.innerHTML = "Passwords must match.";
+        errorDiv.innerHTML = "Passwords must be mached";
         return false;
       }
 
