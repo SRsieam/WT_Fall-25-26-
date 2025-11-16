@@ -65,10 +65,10 @@
   <h2>Registration Form</h2>
 
   <form onsubmit="return handleSubmit()">
-    <label>Full Name:</label>
+    <label="name">Full Name:</label>
     <input type="text" id="name" />
 
-    <label>Email:</label>
+    <label="email">Email:</label>
     <input type="email" id="email" />
 
     <label>Phone Number:</label>
