@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Event Registration Form</title>
+  <title>Paricpant Registration Form</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -71,7 +71,7 @@
     <label="email">Email:</label>
     <input type="email" id="email" />
 
-    <label>Phone Number:</label>
+    <label="phoneumber">Phone Number:</label>
     <input type="text" id="phone" />
 
     <label>Password:</label>
