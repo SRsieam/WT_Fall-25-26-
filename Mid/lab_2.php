@@ -71,13 +71,13 @@
     <label="email">Email:</label>
     <input type="email" id="email" />
 
-    <label="phoneumber">Phone Number:</label>
+    <label="phoneNumber">Phone Number:</label>
     <input type="text" id="phone" />
 
-    <label>Password:</label>
+    <label="passord">Password:</label>
     <input type="password" id="password" />
 
-    <label>Confirm Password:</label>
+    <label"confirmPassord>Confirm Password:</label>
     <input type="password" id="confirmPassword" />
 
     <button type="submit">Register</button>
@@ -104,7 +104,7 @@
 
 
       if (name === "" || email === "" || phone === "" || password === "" || confirmPassword === "") {
-        errorDiv.innerHTML = "Please fill in all fields";
+        errorDiv.innerHTML = "Please fill all required fields";
         return false;
       }
 
