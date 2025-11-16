@@ -32,7 +32,8 @@
       border: 1px solid #ccc;
     }
 
-    button {
+    button 
+    {
       width: 30%;
       padding: 10px;
       margin-top: 10px;
@@ -65,9 +66,10 @@
 </head>
 <body>
 
-  <h2>Student Registration</h2>
+  
 
   <form onsubmit="return handleSubmit()">
+  <h2>Student Registration</h2>
     <label="name">Full Name:</label>
     <input type="text" id="name" />
 
@@ -123,6 +125,7 @@
       `;
       return false; 
     }
+    
   </script>
 
 </body>
