@@ -1,0 +1,1 @@
+codegit config user.name "Your Name"
