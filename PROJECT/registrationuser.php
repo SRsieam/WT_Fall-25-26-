@@ -4,8 +4,7 @@
     <title>Registration Form</title>
 
     <style>
-        body 
-        {
+        body {
             font-family: Arial;
             background: #f2f2f2;
             display: flex;
@@ -14,11 +13,10 @@
             height: 100vh;
         }
 
-        .form-box 
-        {
+        .form-box {
             background: white;
             padding: 20px;
-            width: 320px;
+            width: 330px;
             border-radius: 8px;
             box-shadow: 0 0 10px gray;
         }
@@ -27,15 +25,13 @@
             text-align: center;
         }
 
-        input 
-        {
+        input, select {
             width: 100%;
             padding: 8px;
             margin: 6px 0;
         }
 
-        button 
-        {
+        button {
             width: 100%;
             padding: 10px;
             background: green;
@@ -44,13 +40,11 @@
             cursor: pointer;
         }
 
-        button:hover 
-        {
+        button:hover {
             background: darkgreen;
         }
 
-        .error 
-        {
+        .error {
             color: red;
             text-align: center;
             font-size: 14px;
@@ -68,8 +62,24 @@
     <input type="text" id="name" placeholder="Full Name">
     <input type="email" id="email" placeholder="Email">
 
-    <input type="text" id="location" placeholder="Location">
-    <input type="text" id="area" placeholder="Area">
+    <!-- Division Dropdown -->
+    <select id="division">
+        <option value="">Select Division</option>
+        <option>Dhaka</option>
+        <option>Chattogram</option>
+        <option>Rajshahi</option>
+        <option>Khulna</option>
+        <option>Barishal</option>
+        <option>Sylhet</option>
+        <option>Rangpur</option>
+        <option>Mymensingh</option>
+    </select>
+
+    <!-- Area Dropdown -->
+    <select id="area">
+        <option value="">Select Area</option>
+        
+    </select>
 
     <input type="date" id="dob">
     <input type="tel" id="phone" placeholder="Phone Number">
@@ -81,13 +91,13 @@
     function register() {
         var name = document.getElementById("name").value;
         var email = document.getElementById("email").value;
-        var location = document.getElementById("location").value;
+        var division = document.getElementById("division").value;
         var area = document.getElementById("area").value;
         var dob = document.getElementById("dob").value;
         var phone = document.getElementById("phone").value;
         var msg = document.getElementById("msg");
 
-        if (name == "" || email == "" || location == "" || area == "" || dob == "" || phone == "") {
+        if (name == "" || email == "" || division == "" || area == "" || dob == "" || phone == "") {
             msg.innerText = "Please fill all details";
         } else {
             msg.innerText = "";
