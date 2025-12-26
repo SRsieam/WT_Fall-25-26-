@@ -3,8 +3,7 @@ $msg = "";
 $fetch = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") 
-    {
-
+{
     $name     = $_POST["name"] ?? "";
     $email    = $_POST["email"] ?? "";
     $division = $_POST["division"] ?? "";
@@ -20,8 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
         $msg = "Email must contain @ and .com";
     }
+    else if (!ctype_digit($phone) || strlen($phone) < 11)
+    {
+        $msg = "Phone number must be numeric and at least 11 digits";
+    }
     else
-     {
+    {
         $fetch = "
         <b>Registered Data:</b><br>
         Name: $name <br>
@@ -40,7 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 <title>Registration Form</title>
 
 <style>
-body {
+body 
+{
     font-family: Arial;
     background: #f2f2f2;
     display: flex;
@@ -48,7 +52,8 @@ body {
     align-items: center;
     height: 100vh;
 }
-.form-box {
+.form-box 
+{
     background: white;
     padding: 20px;
     width: 360px;
@@ -56,8 +61,9 @@ body {
     box-shadow: 0 0 10px gray;
 }
 h2 { text-align: center; }
-input, select
- {
+input, select 
+
+{
     width: 100%;
     padding: 8px;
     margin: 6px 0;
@@ -96,7 +102,6 @@ button
 <input type="text" name="name" placeholder="Full Name" required>
 <input type="text" name="email" placeholder="Email" required>
 
-
 <select name="division" id="division" onchange="loadDistricts()" required>
     <option value="">Select Division</option>
     <option>Dhaka</option>
@@ -108,7 +113,6 @@ button
     <option>Rangpur</option>
     <option>Mymensingh</option>
 </select>
-
 
 <select name="district" id="district" required>
     <option value="">Select District</option>
@@ -126,48 +130,57 @@ button
 <script>
 function loadDistricts() 
 {
-
     var division = document.getElementById("division").value;
     var districtBox = document.getElementById("district");
 
     districtBox.innerHTML = "<option value=''>Select District</option>";
-
     var list = [];
 
-    if (division == "Dhaka") {
+    if (division == "Dhaka")
+    
+   {
         list = ["Dhaka","Gazipur","Narayanganj","Narsingdi","Tangail",
                 "Kishoreganj","Munshiganj","Manikganj","Faridpur",
                 "Madaripur","Shariatpur","Gopalganj","Rajbari"];
     }
-    else if (division == "Chattogram") {
+    else if (division == "Chattogram") 
+    {
         list = ["Chattogram","Cox's Bazar","Comilla","Noakhali","Feni",
                 "Chandpur","Bandarban","Rangamati","Khagrachari",
                 "Lakshmipur","Brahmanbaria"];
     }
-    else if (division == "Rajshahi") {
+    else if (division == "Rajshahi") 
+    {
         list = ["Rajshahi","Bogura","Naogaon","Natore","Pabna",
                 "Sirajganj","Joypurhat","Chapainawabganj"];
     }
-    else if (division == "Khulna") {
+    else if (division == "Khulna") 
+    {
         list = ["Khulna","Jashore","Satkhira","Bagerhat","Jhenaidah",
                 "Magura","Narail","Chuadanga","Meherpur"];
     }
-    else if (division == "Barishal") {
+    else if (division == "Barishal") 
+    
+    {
         list = ["Barishal","Bhola","Patuakhali","Pirojpur",
                 "Jhalokathi","Barguna"];
     }
-    else if (division == "Sylhet") {
+    else if (division == "Sylhet") 
+    {
         list = ["Sylhet","Moulvibazar","Habiganj","Sunamganj"];
     }
-    else if (division == "Rangpur") {
+    else if (division == "Rangpur") 
+    {
         list = ["Rangpur","Dinajpur","Kurigram","Gaibandha",
                 "Lalmonirhat","Nilphamari","Panchagarh","Thakurgaon"];
     }
-    else if (division == "Mymensingh") {
+    else if (division == "Mymensingh") 
+    {
         list = ["Mymensingh","Jamalpur","Netrokona","Sherpur"];
     }
 
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < list.length; i++) 
+    {
         var opt = document.createElement("option");
         opt.value = list[i];
         opt.text = list[i];
