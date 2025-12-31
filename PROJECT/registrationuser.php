@@ -1,4 +1,6 @@
 <?php
+include "db.php";
+
 $msg = "";
 $fetch = "";
 
@@ -35,14 +37,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
     else
     {
-        $fetch = "
-        <b>Registered Data:</b><br>
-        Name: $name <br>
-        Email: $email <br>
-        Division: $division <br>
-        District: $district <br>
-        DOB: $dob <br>
-        Phone: $phone";
+        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO users (name, email, division, district, dob, phone, password)
+                VALUES ('$name', '$email', '$division', '$district', '$dob', '$phone', '$hashPassword')";
+
+        if (mysqli_query($conn, $sql)) {
+
+            $fetch = "
+            <b>Registered Data:</b><br>
+            Name: $name <br>
+            Email: $email <br>
+            Division: $division <br>
+            District: $district <br>
+            DOB: $dob <br>
+            Phone: $phone";
+
+        } else {
+            $msg = "Database Error!";
+        }
     }
 }
 ?>
