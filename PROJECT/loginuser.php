@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email    = trim($_POST["email"]);
     $password = trim($_POST["password"]);
-
     if (empty($email) || empty($password)) {
         $msg = "Please enter email and password";
     }
@@ -66,8 +65,8 @@ button { width:100%; padding:10px; background:green; color:white; border:none; }
 <p class="msg"><?php echo $msg; ?></p>
 
 <form method="post" autocomplete="off">
-    <input type="email" name="email" placeholder="Email" required autocomplete="off" value="">
-    <input type="password" name="password" placeholder="Password" required value="" autocomplete="new-password">
+    <input type="email" name="email" placeholder="Email" autocomplete="off" value="">
+    <input type="password" name="password" placeholder="Password" value="" autocomplete="new-password">
     <button type="submit">Login</button>
 </form>
 
