@@ -35,7 +35,7 @@
         }
 
         button {
-            width: 100%;
+            width: 108%;
             padding: 12px;
             background: #4CAF50;
             color: white;
