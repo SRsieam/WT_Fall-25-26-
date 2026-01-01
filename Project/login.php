@@ -97,12 +97,23 @@
         }
     }
 
-    <form>
-        <input type="text" name="username" placeholder="Username or Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
+    function test_input($data) {
+        $data = trim($data);
+        return $data;
+    }
+    ?>
+
+    <form method="POST" action="">
+    <input type="text" name="username" placeholder="Username" value="<?php echo $username; ?>"><br>
+    <span class="error"><?php echo $usererror; ?></span><br>
+
+    <input type="password" name="password" placeholder="Password" value="<?php echo $password; ?>"><br>
+    <span class="error"><?php echo $passerror; ?></span><br>
+
+    <button type="submit">Login</button>    
     </form>
 
+    
 </div>
 
 </body>
