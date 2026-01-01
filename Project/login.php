@@ -1,35 +1,3 @@
-<?php
-// Initialize variables
-$username = "";
-$password = "";
-$error = "";
-
-// Check form submit
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    // Username validation
-    if (empty($_POST["username"])) {
-        $error = "Username or Email is required";
-    } 
-    // Password validation
-    elseif (empty($_POST["password"])) {
-        $error = "Password is required";
-    } 
-    else {
-        // Clean input
-        $username = htmlspecialchars(trim($_POST["username"]));
-        $password = htmlspecialchars(trim($_POST["password"]));
-
-        // Example login check (demo only)
-        if ($username === "admin" && $password === "12345") {
-            echo "<script>alert('Login Successful');</script>";
-        } else {
-            $error = "Invalid Username or Password";
-        }
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
