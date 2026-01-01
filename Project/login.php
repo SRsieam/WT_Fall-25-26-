@@ -1,3 +1,35 @@
+<?php
+// Initialize variables
+$username = "";
+$password = "";
+$error = "";
+
+// Check form submit
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // Username validation
+    if (empty($_POST["username"])) {
+        $error = "Username or Email is required";
+    } 
+    // Password validation
+    elseif (empty($_POST["password"])) {
+        $error = "Password is required";
+    } 
+    else {
+        // Clean input
+        $username = htmlspecialchars(trim($_POST["username"]));
+        $password = htmlspecialchars(trim($_POST["password"]));
+
+        // Example login check (demo only)
+        if ($username === "admin" && $password === "12345") {
+            echo "<script>alert('Login Successful');</script>";
+        } else {
+            $error = "Invalid Username or Password";
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,6 +102,33 @@
 
 <div class="login-box">
     <h2>Login</h2>
+
+    <?php
+    $username = "";
+    $password = "";
+    $usererror = "";
+    $passerror = "";
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        if (empty($_POST["username"])) {
+            $usererror = "Username is required";
+        } else {
+            $username = test_input($_POST["username"]);
+            if (!preg_match("/^[a-zA-Z0-9._-]{3,20}$/", $username)) {
+                $usererror = "Invalid username format";
+            }
+        }
+
+        if (empty($_POST["password"])) {
+            $passerror = "Password is required";
+        } else {
+            $password = test_input($_POST["password"]);
+            if (strlen($password) < 6) {
+                $passerror = "Password must be at least 6 characters long";
+            }
+        }
+    }
+
     <form>
         <input type="text" name="username" placeholder="Username or Email" required>
         <input type="password" name="password" placeholder="Password" required>
