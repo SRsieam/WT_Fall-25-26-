@@ -6,6 +6,7 @@ $msg = "";
 
 $user_id = $_SESSION["user_id"] ?? 0;
 $user_name = $_SESSION["user_name"] ?? "";
+
 if ($user_id == 0) {
     die("Please login first.");
 }
@@ -31,8 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($content == "" && $imageName == "") {
         $msg = "What's on your mind?";
-    } else 
-    {
+    } else {
         $stmt = $conn->prepare(
             "INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)"
         );
@@ -71,11 +71,15 @@ $posts = mysqli_query(
             padding: 8px 15px;
             margin-top: 10px;
             cursor: pointer;
+            border-radius: 4px;
         }
         .post img { width: 100%; margin-top: 10px; border-radius: 8px; }
         .msg { color: red; text-align: center; }
         .post-name { font-weight: bold; }
         small { color: gray; }
+        .logout-btn {
+            background: #e53935;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +87,17 @@ $posts = mysqli_query(
 <div class="container">
 
     <div class="post-box">
-        <p><strong>Logged in as:</strong> <?php echo htmlspecialchars($user_name); ?></p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <p style="margin:0;">
+                <strong>Logged in as:</strong>
+                <?php echo htmlspecialchars($user_name); ?>
+            </p>
+
+            <form action="logout.php" method="post" style="margin:0;">
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+
         <p class="msg"><?php echo $msg; ?></p>
 
         <form method="post" enctype="multipart/form-data">
