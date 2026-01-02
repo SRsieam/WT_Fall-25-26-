@@ -74,14 +74,12 @@
 </head>
 <body>
 
-
 <div class="top">
     <h1>CrimeAlert</h1>
     <p>Report crimes in your area quickly and safely</p>
 
 </div>
 
-<!-- Features Section -->
 <div class="section">
     <div class="box">
         <h3>Alerts</h3>
@@ -97,10 +95,6 @@
         <h3>Community</h3>
         <p></p>
     </div>
-</div>
-
-
-
 </div>
 
 </body>
