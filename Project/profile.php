@@ -22,7 +22,7 @@
             margin-bottom: 25px;
         }
 
-        .row {
+        .box {
             margin-bottom: 12px;
             font-size: 16px;
         }
@@ -55,23 +55,23 @@
 <div class="profile-box">
     <h2>My Profile</h2>
 
-    <div class="row">
+    <div class="box">
         <span class="label">Name:</span> Sieam
     </div>
 
-    <div class="row">
+    <div class="box">
         <span class="label">Username:</span> srs
     </div>
 
-    <div class="row">
+    <div class="box">
         <span class="label">Email:</span> srs@gmail.com
     </div>
 
-    <div class="row">
+    <div class="box">
         <span class="label">Phone:</span> 01584619846
     </div>
 
-    <div class="row">
+    <div class="box">
         <span class="label">Address:</span> Dhaka
     </div>
 
