@@ -1,11 +1,11 @@
 <?php
-session_start();          // ✅ REQUIRED
+session_start();          
 include "db.php";
 
 $msg = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+{
     $email    = trim($_POST["email"]);
     $password = trim($_POST["password"]);
 
@@ -16,8 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $msg = "Invalid email format";
     }
     else {
-
-        /* ✅ SECURE QUERY */
         $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -25,16 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($row = $result->fetch_assoc()) {
 
-            if (password_verify($password, $row["password"])) {
-
-                /* ✅ SET SESSION */
+            if (password_verify($password, $row["password"])) 
+            {
                 $_SESSION["user_id"]   = $row["id"];
                 $_SESSION["user_name"] = $row["name"];
-
-                /* ✅ REDIRECT */
                 header("Location: homepage.php");
                 exit();
-
             } else {
                 $msg = "Incorrect email or password";
             }
@@ -70,7 +64,7 @@ body {
 }
 h2 { text-align:center; }
 input { width:100%; padding:8px; margin:6px 0; }
-button { width:100%; padding:10px; background:green; color:white; border:none; }
+button { width:100%; padding:10px; background:green; color:white; border:none; cursor:pointer; }
 .msg { text-align:center; color:red; }
 </style>
 </head>
@@ -82,8 +76,8 @@ button { width:100%; padding:10px; background:green; color:white; border:none; }
 <p class="msg"><?php echo $msg; ?></p>
 
 <form method="post" autocomplete="off">
-    <input type="email" name="email" placeholder="Email" required>
-    <input type="password" name="password" placeholder="Password" required>
+    <input type="email" name="email" placeholder="Email" value="" autocomplete="off" required>
+    <input type="password" name="password" placeholder="Password" value="" autocomplete="new-password" required>
     <button type="submit">Login</button>
 </form>
 
