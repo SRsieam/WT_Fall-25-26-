@@ -6,7 +6,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #0f4eadff;
+            background: #f2f2f2;
             margin: 0;
         }
         .container {
@@ -76,6 +76,13 @@
 </head>
 
 <body>
+    <?php
+    $title = "";
+    $description = "";
+    $type = "";
+    $success = "";
+    $error = "";
+    
 
 </body>
 </html>
