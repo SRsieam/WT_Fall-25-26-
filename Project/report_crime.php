@@ -107,6 +107,33 @@
         echo '<div class="error">' . $error . '</div>';
     }
     ?>
+
+    <form method="POST">
+
+        <label>Crime Type</label>
+        <select name="type">
+            <option value="">Select Type</option>
+            <option value="theft">Theft</option>
+            <option value="robbery">Robbery</option>
+            <option value="assault">Assault</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label>Title</label>
+        <input type="text" name="title" value="<?php echo
+        $title; ?>">
+
+        <label>Description</label>
+        <textarea name="description" rows="4"><?php echo $description; ?></textarea>
+
+        <label>Location</label>
+        <div id="map" class="map"></div>
+
+        <button type="button">Use Current Location</button>
+
+        <button type="submit">Submit Report</button>
+    </form>
+</div>
     
 
 
