@@ -134,8 +134,5 @@
         <button type="submit">Submit Report</button>
     </form>
 </div>
-    
-
-
 </body>
 </html>
