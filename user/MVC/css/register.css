@@ -1,0 +1,48 @@
+body {
+    font-family: Arial;
+    background:
+        linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+        url("../images/bg_rg.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.form-box {
+    background: white;
+    padding: 20px;
+    width: 360px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px gray;
+}
+
+h2 { text-align: center; }
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 6px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: green;
+    color: white;
+    border: none;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.success {
+    color: green;
+    text-align: center;
+    font-weight: bold;
+}

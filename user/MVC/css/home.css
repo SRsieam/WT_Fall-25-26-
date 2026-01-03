@@ -1,0 +1,66 @@
+body {
+    font-family: Arial;
+    background: #f0f2f5;
+}
+
+.container {
+    width: 500px;
+    margin: auto;
+}
+
+.post-box, .post {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    resize: none;
+}
+
+button {
+    background: #1877f2;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.post img {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.msg {
+    color: red;
+    text-align: center;
+}
+
+.post-name {
+    font-weight: bold;
+}
+
+small {
+    color: gray;
+}
+
+.logout-btn {
+    background: #e53935;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.no-post {
+    text-align: center;
+    margin-top: 20px;
+}
