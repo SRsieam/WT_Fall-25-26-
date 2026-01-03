@@ -12,7 +12,7 @@
         .container {
             max-width: 600px;
             margin: 40px auto;
-            background: white;
+            background: lightblue;
             padding: 25px;
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -82,7 +82,33 @@
     $type = "";
     $success = "";
     $error = "";
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+        $title = trim($_POST["title"]);
+        $description = trim($_POST["description"]);
+        $type = trim($_POST["type"]);
+
+        if ($title == "" || $description == "" || $type == "") {
+            $error = "All fields are required";
+        } else {
+            $success = "Crime reported successfully";
+        }
+    }
+    ?>
+
+<div class="container">
+    <h2>Submit a Crime Report</h2>
+
+    <?php
+    if ($success) {
+        echo '<div class="success">' . $success . '</div>';
+    } else if ($error) {
+        echo '<div class="error">' . $error . '</div>';
+    }
+    ?>
     
+
 
 </body>
 </html>
