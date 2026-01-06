@@ -12,6 +12,8 @@ if ($user_id == 0) {
 }
 
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : "";
+$filter_cat = isset($_GET['filter_cat']) ? mysqli_real_escape_string($conn, $_GET['filter_cat']) : "";
+$filter_date = isset($_GET['filter_date']) ? mysqli_real_escape_string($conn, $_GET['filter_date']) : "";
 
 $cat_query = "SELECT * FROM crime_categories ORDER BY category_name ASC";
 $categories_result = mysqli_query($conn, $cat_query);
@@ -29,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if ($content != "" && !empty($cat_id)) {
-
         $sql = "INSERT INTO posts (user_id, content, category_id, image, status) 
                 VALUES ('$user_id', '$content', '$cat_id', '$imageName', 'Pending')";
         
@@ -45,12 +46,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $sql_fetch = "SELECT posts.*, users.name, crime_categories.category_name 
               FROM posts 
               LEFT JOIN users ON posts.user_id = users.id 
-              LEFT JOIN crime_categories ON posts.category_id = crime_categories.id";
+              LEFT JOIN crime_categories ON posts.category_id = crime_categories.id
+              WHERE 1=1"; 
 
 if ($search != "") {
-    $sql_fetch .= " WHERE posts.content LIKE '%$search%' 
-                    OR crime_categories.category_name LIKE '%$search%' 
-                    OR users.name LIKE '%$search%'";
+    $sql_fetch .= " AND (posts.content LIKE '%$search%' OR users.name LIKE '%$search%')";
+}
+
+if ($filter_cat != "") {
+    $sql_fetch .= " AND posts.category_id = '$filter_cat'";
+}
+
+if ($filter_date != "") {
+    $sql_fetch .= " AND DATE(posts.created_at) = '$filter_date'";
 }
 
 $sql_fetch .= " ORDER BY posts.id DESC";
@@ -68,20 +76,20 @@ if (!$posts) {
     <title>Dashboard | Crime Detection</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; display: flex; }
-
         .sidebar { width: 240px; background: #1a252f; color: white; height: 100vh; position: fixed; padding: 25px; box-sizing: border-box; }
         .sidebar h2 { color: #e74c3c; margin-top: 0; }
         .logout-link { display: block; margin-top: 30px; color: #bdc3c7; text-decoration: none; font-size: 14px; }
 
-        .main { margin-left: 240px; padding: 30px; width: 100%; max-width: 800px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .main { margin-left: 240px; padding: 30px; width: 100%; max-width: 850px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
  
-        textarea, select, .search-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        .btn-red { background: #e74c3c; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        textarea, select, input { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .btn-red { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn-red:hover { background: #c0392b; }
 
-        .search-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-search { width: auto; background: #34495e; margin: 10px 0; }
+    
+        .filter-grid { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end; }
+        .btn-search { background: #34495e; height: 40px; }
 
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .author { font-weight: bold; font-size: 1.1rem; color: #2c3e50; }
@@ -104,13 +112,43 @@ if (!$posts) {
 
 <div class="main">
     <div class="card">
-        <form method="GET" action="homepage.php" class="search-container">
-            <input type="text" name="search" class="search-input" placeholder="Search here" value="<?php echo htmlspecialchars($search); ?>">
-            <button type="submit" class="btn-red btn-search">Search</button>
+        <form method="GET" action="homepage.php" class="filter-grid">
+            <div>
+                <label style="font-size:12px;">Search Keyword</label>
+                <input type="text" name="search" placeholder="Keyword..." value="<?php echo htmlspecialchars($search); ?>">
+            </div>
+            
+            <div>
+                <label style="font-size:12px;">Category</label>
+                <select name="filter_cat">
+                    <option value="">All Categories</option>
+                    <?php 
+                    mysqli_data_seek($categories_result, 0); 
+                    while($cat = mysqli_fetch_assoc($categories_result)): 
+                    ?>
+                        <option value="<?php echo $cat['id']; ?>" <?php if($filter_cat == $cat['id']) echo "selected"; ?>>
+                            <?php echo htmlspecialchars($cat['category_name']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div>
+                <label style="font-size:12px;">Select Date</label>
+                <input type="date" name="filter_date" value="<?php echo $filter_date; ?>">
+            </div>
+
+            <button type="submit" class="btn-red btn-search">Apply Filters</button>
         </form>
-        <?php if ($search != ""): ?>
-            <small>Showing results for: <strong><?php echo htmlspecialchars($search); ?></strong> | <a href="homepage.php" style="color: #e74c3c;">Clear</a></small>
-        <?php endif; ?>
+        
+        <div style="margin-top: 10px; display: flex; justify-content: space-between;">
+            <small>
+                <?php if($filter_date == date('Y-m-d')) echo "<b>Viewing Today's Alerts</b>"; ?>
+            </small>
+            <?php if ($search != "" || $filter_cat != "" || $filter_date != ""): ?>
+                <a href="homepage.php" style="color: #e74c3c; font-size: 12px; text-decoration: none;">Clear Filters</a>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="card">
@@ -118,17 +156,20 @@ if (!$posts) {
         <?php if($msg): ?><p style="color: #e74c3c; font-weight:bold;"><?php echo $msg; ?></p><?php endif; ?>
         
         <form method="post" enctype="multipart/form-data">
-            <textarea name="content" rows="3" placeholder="What happened? Provide details..."></textarea>
+            <textarea name="content" rows="3" placeholder="Describe the incident..."></textarea>
             
             <select name="category_id" required>
                 <option value="">-- Select Crime Category --</option>
-                <?php while($cat = mysqli_fetch_assoc($categories_result)): ?>
+                <?php 
+                mysqli_data_seek($categories_result, 0); 
+                while($cat = mysqli_fetch_assoc($categories_result)): 
+                ?>
                     <option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['category_name']); ?></option>
                 <?php endwhile; ?>
             </select>
 
             <div style="margin: 10px 0;">
-                <label style="font-size: 13px; color: #666;">Attach Evidence (Image):</label><br>
+                <label style="font-size: 13px; color: #666;">Attach Evidence:</label><br>
                 <input type="file" name="image">
             </div>
             
@@ -136,9 +177,9 @@ if (!$posts) {
         </form>
     </div>
 
+    
+
     <h2 style="color: #34495e;">Recent Alerts</h2>
-    
-    
 
     <?php if (mysqli_num_rows($posts) > 0): ?>
         <?php while ($row = mysqli_fetch_assoc($posts)): ?>
@@ -161,7 +202,7 @@ if (!$posts) {
             </div>
         <?php endwhile; ?>
     <?php else: ?>
-        <p style="text-align:center; color: #95a5a6;">No alerts match your criteria.</p>
+        <p style="text-align:center; color: #95a5a6;">No alerts found for the selected criteria.</p>
     <?php endif; ?>
 </div>
 
