@@ -6,189 +6,155 @@ $success = false;
 
 $name = $email = $division = $district = $dob = $phone = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") 
-{
-    $name     = mysqli_real_escape_string($conn, $_POST["name"]);
-    $email    = mysqli_real_escape_string($conn, $_POST["email"]);
-    $division = mysqli_real_escape_string($conn, $_POST["division"]);
-    $district = mysqli_real_escape_string($conn, $_POST["district"]);
-    $dob      = mysqli_real_escape_string($conn, $_POST["dob"]);
-    $phone    = mysqli_real_escape_string($conn, $_POST["phone"]);
-    $password = $_POST["password"] ?? "";
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+     {
+
+    $name      = trim($_POST["name"] ?? "");
+    $email     = trim($_POST["email"] ?? "");
+    $division  = trim($_POST["division"] ?? "");
+    $district  = trim($_POST["district"] ?? "");
+    $dob       = trim($_POST["dob"] ?? "");
+    $phone     = trim($_POST["phone"] ?? "");
+    $password  = $_POST["password"] ?? "";
     $cpassword = $_POST["cpassword"] ?? "";
 
+    $name     = mysqli_real_escape_string($conn, $name);
+    $email    = mysqli_real_escape_string($conn, $email);
+    $division = mysqli_real_escape_string($conn, $division);
+    $district = mysqli_real_escape_string($conn, $district);
+    $dob      = mysqli_real_escape_string($conn, $dob);
+    $phone    = mysqli_real_escape_string($conn, $phone);
 
-    if (str_word_count($name) < 2) {
-        $msg = "Name must contain first name and last name";
+
+    if ($name == "" || $email == "" || $dob == "" || $phone == "") {
+        $msg = "All required fields must be filled.";
     }
-    else if (strpos($email, "@") === false || strpos($email, ".com") === false) {
-        $msg = "Email must contain @ and .com";
+    else if (str_word_count($name) < 2) {
+        $msg = "Full Name must contain at least two words.";
     }
-    else if (!ctype_digit($phone) || strlen($phone) < 11) {
-        $msg = "Phone number must be numeric and at least 11 digits";
+    else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $msg = "Enter a valid email address.";
+    }
+    else if ($division == "" || $district == "") {
+        $msg = "Please select both Division and District.";
+    }
+    else if (!preg_match("/^[0-9]{11}$/", $phone)) {
+        $msg = "Phone number must be exactly 11 digits.";
+    }
+    else if (strlen($password) < 6) {
+        $msg = "Password must be at least 6 characters long.";
     }
     else if (!preg_match("/[@$!%*#?&]/", $password)) {
-        $msg = "Password must contain at least one special character";
+        $msg = "Password must contain at least one special character.";
     }
     else if ($password !== $cpassword) {
-        $msg = "Password and Confirm Password do not match";
+        $msg = "Passwords do not match.";
     }
     else {
-        $hashPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO users (name, email, division, district, dob, phone, password)
-                VALUES ('$name', '$email', '$division', '$district', '$dob', '$phone', '$hashPassword')";
 
-        if (mysqli_query($conn, $sql)) {
-            $msg = "Registration successful! You can now login.";
-            $success = true;
-
-            $name = $email = $division = $district = $dob = $phone = "";
+        $check = mysqli_query($conn, "SELECT id FROM users WHERE email='$email'");
+        if (mysqli_num_rows($check) > 0) {
+            $msg = "This email is already registered.";
         } else {
-            $msg = "Database Error: " . mysqli_error($conn);
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+
+            $sql = "INSERT INTO users 
+                    (name, email, division, district, dob, phone, password)
+                    VALUES 
+                    ('$name', '$email', '$division', '$district', '$dob', '$phone', '$hash')";
+
+            if (mysqli_query($conn, $sql)) {
+                $msg = "Registration successful!";
+                $success = true;
+
+                $name = $email = $division = $district = $dob = $phone = "";
+            } else {
+                $msg = "Database error!";
+            }
         }
     }
 }
 ?>
 
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Join Crime Detect | Secure Registration</title>
+    <title>Registration | Crime Detection</title>
     <style>
-        :root {
-            --primary: #e74c3c;
-            --overlay: rgba(0, 0, 0, 0.6);
-        }
-
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background: var(--overlay) url("bg_rg.png") no-repeat center center fixed;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url("bg_rg.png") no-repeat center center fixed;
             background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
         }
-
         .form-box {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            width: 400px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
+            background: #ffffff;
+            padding: 30px; width: 400px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-
-        h2 { 
-            text-align: center; 
-            color: #2c3e50;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 3px solid var(--primary);
-            display: inline-block;
-            width: 100%;
-            padding-bottom: 10px;
-        }
-
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; margin-bottom: 20px; }
+        
         .input-group { margin-bottom: 15px; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        
+        input:focus { border-color: #e74c3c; outline: none; }
 
-        label { display: block; margin-bottom: 5px; color: #666; font-size: 13px; font-weight: bold; }
+        .status-msg { padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 15px; font-weight: bold; font-size: 13px; }
+        .error { background: #fdecea; color: #af2b2b; border: 1px solid #f5c6cb; }
+        .success { background: #e6f4ea; color: #1e7e34; border: 1px solid #c3e6cb; }
 
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            margin-top: 10px;
-        }
-
-        button:hover { background: #c0392b; transform: translateY(-2px); }
-
-        .login-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #3498db;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .error { color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px; }
-        .success { color: #2e7d32; background: #e8f5e9; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px; }
+        button { width: 100%; padding: 14px; background: #e74c3c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #c0392b; }
+        
+        .footer { text-align: center; margin-top: 15px; font-size: 14px; }
+        .footer a { color: #3498db; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="form-box">
-    <h2>Registration</h2>
+    <h2>REGISTRATION</h2>
 
-    <?php if($msg): ?>
-        <p class="<?php echo $success ? 'success' : 'error'; ?>"><?php echo $msg; ?></p>
+    <?php if(!empty($msg)): ?>
+        <div class="status-msg <?php echo $success ? 'success' : 'error'; ?>">
+            <?php echo $msg; ?>
+        </div>
     <?php endif; ?>
 
     <form method="post" autocomplete="off">
+        
         <div class="input-group">
-            <input type="text" name="name" placeholder="Full Name (First & Last)" required value="<?php echo $name; ?>">
+            <input type="text" name="name" placeholder="Full Name" value="<?php echo htmlspecialchars($name); ?>" required>
         </div>
 
         <div class="input-group">
-            <input type="text" name="email" placeholder="Email Address" required value="<?php echo $email; ?>">
+            <input type="email" name="email" placeholder="Email Address" value="<?php echo htmlspecialchars($email); ?>" required>
         </div>
 
-        <div style="display: flex; gap: 10px;" class="input-group">
+        <div class="input-group" style="display: flex; gap: 10px;">
             <select name="division" id="division" onchange="loadDistricts()" required>
                 <option value="">Division</option>
                 <option <?php if($division=="Dhaka") echo "selected"; ?>>Dhaka</option>
                 <option <?php if($division=="Chattogram") echo "selected"; ?>>Chattogram</option>
                 <option <?php if($division=="Rajshahi") echo "selected"; ?>>Rajshahi</option>
-                <option <?php if($division=="Khulna") echo "selected"; ?>>Khulna</option>
-                <option <?php if($division=="Barishal") echo "selected"; ?>>Barishal</option>
-                <option <?php if($division=="Sylhet") echo "selected"; ?>>Sylhet</option>
-                <option <?php if($division=="Rangpur") echo "selected"; ?>>Rangpur</option>
-                <option <?php if($division=="Mymensingh") echo "selected"; ?>>Mymensingh</option>
             </select>
-
             <select name="district" id="district" required>
                 <option value="">District</option>
             </select>
         </div>
 
         <div class="input-group">
-            <label>Date of Birth</label>
-            <input type="date" name="dob" required value="<?php echo $dob; ?>">
+            <label style="font-size: 11px; color: #777; margin-left: 2px;">Date of Birth</label>
+            <input type="date" name="dob" value="<?php echo $dob; ?>" required>
         </div>
 
         <div class="input-group">
-            <input type="text" name="phone" placeholder="Phone (e.g. 017...)" required value="<?php echo $phone; ?>">
+            <input type="text" name="phone" placeholder="Phone Number (11 Digits)" value="<?php echo htmlspecialchars($phone); ?>" required>
         </div>
 
         <div class="input-group">
-            <input type="password" name="password" placeholder="Password (incl. @$!%...)" required autocomplete="new-password">
+            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
         </div>
 
         <div class="input-group">
@@ -196,33 +162,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         </div>
 
         <button type="submit">Create Account</button>
-        <a href="loginuser.php" class="login-link">Already have an account? Login</a>
+        
+        <div class="footer">
+            Already have an account? <a href="loginuser.php">Login</a>
+        </div>
     </form>
 </div>
 
+
+
 <script>
-
 function loadDistricts() {
-    var division = document.getElementById("division").value;
-    var districtBox = document.getElementById("district");
-    districtBox.innerHTML = "<option value=''>District</option>";
-
+    var div = document.getElementById("division").value;
+    var dist = document.getElementById("district");
+    dist.innerHTML = "<option value=''>District</option>";
     var list = [];
-    if (division == "Dhaka") list = ["Dhaka","Gazipur","Narayanganj","Tangail","Faridpur"];
-    else if (division == "Chattogram") list = ["Chattogram","Cox's Bazar","Comilla","Noakhali"];
-    else if (division == "Rajshahi") list = ["Rajshahi","Bogura","Pabna"];
-    else if (division == "Khulna") list = ["Khulna","Jashore","Satkhira"];
-    else if (division == "Barishal") list = ["Barishal","Bhola"];
-    else if (division == "Sylhet") list = ["Sylhet","Habiganj"];
-    else if (division == "Rangpur") list = ["Rangpur","Dinajpur"];
-    else if (division == "Mymensingh") list = ["Mymensingh","Sherpur"];
-
-    for (var i = 0; i < list.length; i++) {
+    if(div=="Dhaka") list = ["Dhaka", "Gazipur", "Narayanganj"];
+    else if(div=="Chattogram") list = ["Chattogram", "Cox's Bazar"];
+    else if(div=="Rajshahi") list = ["Rajshahi", "Bogura"];
+    
+    for(var i=0; i<list.length; i++){
         var opt = document.createElement("option");
         opt.value = opt.text = list[i];
-        districtBox.add(opt);
+        dist.add(opt);
     }
 }
+
+window.onload = function() {
+    var savedDivision = "<?php echo $division; ?>";
+    if(savedDivision !== "") {
+        loadDistricts();
+        document.getElementById("district").value = "<?php echo $district; ?>";
+    }
+};
 </script>
 
 </body>
