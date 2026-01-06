@@ -11,15 +11,12 @@ if ($user_id == 0) {
     exit();
 }
 
-
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : "";
 $filter_cat = isset($_GET['filter_cat']) ? mysqli_real_escape_string($conn, $_GET['filter_cat']) : "";
 $filter_date = isset($_GET['filter_date']) ? mysqli_real_escape_string($conn, $_GET['filter_date']) : "";
 
-
 $cat_query = "SELECT * FROM crime_categories ORDER BY category_name ASC";
 $categories_result = mysqli_query($conn, $cat_query);
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_post'])) {
     $content = mysqli_real_escape_string($conn, trim($_POST["content"]));
@@ -82,11 +79,11 @@ $posts = mysqli_query($conn, $sql_fetch);
         .chat-header { background: #2c3e50; color: white; padding: 15px; text-align: center; font-weight: bold; }
         #chat-box { flex: 1; overflow-y: auto; padding: 15px; background: #fdfdfd; display: flex; flex-direction: column; }
         .chat-input-area { padding: 15px; border-top: 1px solid #ddd; background: #fff; }
-        
 
         .msg-bubble { margin-bottom: 12px; padding: 10px; border-radius: 8px; background: #f1f3f5; border-left: 4px solid #e74c3c; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .msg-bubble b { color: #2c3e50; display: block; font-size: 12px; margin-bottom: 3px; }
-        .msg-bubble span { font-size: 14px; color: #444; }
+        .msg-bubble span { font-size: 14px; color: #444; word-wrap: break-word; }
+        .msg-time { font-size: 10px; color: #999; margin-top: 5px; text-align: right; }
 
         .main { margin-left: 220px; margin-right: 320px; padding: 30px; width: 100%; box-sizing: border-box; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
@@ -193,8 +190,6 @@ $posts = mysqli_query($conn, $sql_fetch);
     </div>
 </div>
 
-
-
 <script>
 
 function fetchChat() {
@@ -207,9 +202,11 @@ function fetchChat() {
                 var box = document.getElementById("chat-box");
                 var html = "";
                 data.forEach(function(m) {
+
                     html += "<div class='msg-bubble'>" +
                             "<b>" + m.name + ":</b>" +
                             "<span>" + m.message + "</span>" +
+                            "<div class='msg-time'>" + m.created_at + "</div>" + 
                             "</div>";
                 });
                 box.innerHTML = html;
