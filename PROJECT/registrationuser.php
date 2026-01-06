@@ -134,11 +134,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
         <div class="input-group" style="display: flex; gap: 10px;">
             <select name="division" id="division" onchange="loadDistricts()" required>
-                <option value="">Division</option>
-                <option <?php if($division=="Dhaka") echo "selected"; ?>>Dhaka</option>
-                <option <?php if($division=="Chattogram") echo "selected"; ?>>Chattogram</option>
-                <option <?php if($division=="Rajshahi") echo "selected"; ?>>Rajshahi</option>
-            </select>
+    <option value="">Select Division</option>
+    <option <?php if($division=="Dhaka") echo "selected"; ?>>Dhaka</option>
+    <option <?php if($division=="Chattogram") echo "selected"; ?>>Chattogram</option>
+    <option <?php if($division=="Rajshahi") echo "selected"; ?>>Rajshahi</option>
+    <option <?php if($division=="Khulna") echo "selected"; ?>>Khulna</option>
+    <option <?php if($division=="Barishal") echo "selected"; ?>>Barishal</option>
+    <option <?php if($division=="Sylhet") echo "selected"; ?>>Sylhet</option>
+    <option <?php if($division=="Rangpur") echo "selected"; ?>>Rangpur</option>
+    <option <?php if($division=="Mymensingh") echo "selected"; ?>>Mymensingh</option>
+</select>
             <select name="district" id="district" required>
                 <option value="">District</option>
             </select>
@@ -175,15 +180,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 function loadDistricts() {
     var div = document.getElementById("division").value;
     var dist = document.getElementById("district");
-    dist.innerHTML = "<option value=''>District</option>";
+    dist.innerHTML = "<option value=''>Select District</option>";
     var list = [];
-    if(div=="Dhaka") list = ["Dhaka", "Gazipur", "Narayanganj"];
-    else if(div=="Chattogram") list = ["Chattogram", "Cox's Bazar"];
-    else if(div=="Rajshahi") list = ["Rajshahi", "Bogura"];
-    
-    for(var i=0; i<list.length; i++){
+
+    if (div == "Dhaka") {
+        list = ["Dhaka", "Gazipur", "Narayanganj", "Narsingdi", "Tangail", "Kishoreganj", "Manikganj", "Munshiganj", "Rajbari", "Madaripur", "Gopalganj", "Faridpur", "Shariatpur"];
+    } 
+    else if (div == "Chattogram") {
+        list = ["Chattogram", "Cox's Bazar", "Cumilla", "Feni", "Brahmanbaria", "Noakhali", "Lakshmipur", "Chandpur", "Khagrachari", "Rangamati", "Bandarban"];
+    } 
+    else if (div == "Rajshahi") {
+        list = ["Rajshahi", "Bogura", "Pabna", "Sirajganj", "Naogaon", "Natore", "Joypurhat", "Chapai Nawabganj"];
+    } 
+    else if (div == "Khulna") {
+        list = ["Khulna", "Jashore", "Satkhira", "Bagerhat", "Kushtia", "Magura", "Meherpur", "Narail", "Chuadanga", "Jhenaidah"];
+    } 
+    else if (div == "Barishal") {
+        list = ["Barishal", "Bhola", "Patuakhali", "Pirojpur", "Jhalokathi", "Barguna"];
+    } 
+    else if (div == "Sylhet") {
+        list = ["Sylhet", "Moulvibazar", "Habiganj", "Sunamganj"];
+    } 
+    else if (div == "Rangpur") {
+        list = ["Rangpur", "Dinajpur", "Kurigram", "Gaibandha", "Nilphamari", "Panchagarh", "Thakurgaon", "Lalmonirhat"];
+    } 
+    else if (div == "Mymensingh") {
+        list = ["Mymensingh", "Jamalpur", "Netrokona", "Sherpur"];
+    }
+
+    // Populate the district dropdown dynamically
+    for (var i = 0; i < list.length; i++) {
         var opt = document.createElement("option");
-        opt.value = opt.text = list[i];
+        opt.value = list[i];
+        opt.text = list[i];
         dist.add(opt);
     }
 }
