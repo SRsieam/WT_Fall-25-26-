@@ -1,155 +1,147 @@
 <?php
 session_start();
-include "db.php"; // This must use mysqli_connect() as discussed
+include "db.php"; 
 
 $msg = "";
-
-// Check if user is logged in
 $user_id = $_SESSION["user_id"] ?? 0;
 $user_name = $_SESSION["user_name"] ?? "";
 
+// Security check: Redirect if not logged in
 if ($user_id == 0) {
-    die("Please login first.");
+    header("Location: loginuser.php");
+    exit();
 }
 
-// 1. Handle Form Submission (Procedural Style)
+// 1. Fetch Categories for the dropdown
+$cat_query = "SELECT * FROM crime_categories ORDER BY category_name ASC";
+$categories_result = mysqli_query($conn, $cat_query);
+
+// 2. Handle Post Submission (Procedural SQL)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitizing input for Procedural SQL
     $content = mysqli_real_escape_string($conn, trim($_POST["content"]));
+    $cat_id = mysqli_real_escape_string($conn, $_POST["category_id"] ?? "");
     $imageName = "";
 
-    // Ensure uploads directory exists
-    if (!is_dir("uploads")) {
-        mkdir("uploads", 0777, true);
-    }
+    // Directory check
+    if (!is_dir("uploads")) { mkdir("uploads", 0777, true); }
 
-    // Handle Image Upload
+    // Image Upload Logic
     if (!empty($_FILES["image"]["name"])) {
-        // Unique filename to prevent overwriting
         $imageName = time() . "_" . str_replace(" ", "_", basename($_FILES["image"]["name"]));
-        $uploadPath = "uploads/" . $imageName;
-
-        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $uploadPath)) {
-            $msg = "Image upload failed!";
-            $imageName = "";
-        }
+        move_uploaded_file($_FILES["image"]["tmp_name"], "uploads/" . $imageName);
     }
 
-    // Validation
-    if ($content == "" && $imageName == "") {
-        $msg = "Please provide some content or an image.";
-    } else {
-        // Procedural SQL Insertion
-        $sql = "INSERT INTO posts (user_id, content, image) VALUES ('$user_id', '$content', '$imageName')";
+    if ($content != "" && !empty($cat_id)) {
+        // Procedural Insert
+        $sql = "INSERT INTO posts (user_id, content, category_id, image, status) 
+                VALUES ('$user_id', '$content', '$cat_id', '$imageName', 'Pending')";
         
         if (mysqli_query($conn, $sql)) {
-            $msg = "Post shared successfully!";
-            // Refresh to show new post
             header("Location: homepage.php"); 
             exit();
-        } else {
-            $msg = "Database Error: " . mysqli_error($conn);
-        }
+        } else { $msg = "Database Error: " . mysqli_error($conn); }
+    } else { 
+        $msg = "Please fill in the description and select a category."; 
     }
 }
 
-// 2. Fetch All Posts (Procedural SQL with JOIN)
-$sql_fetch = "SELECT posts.content, posts.image, posts.created_at, users.name 
+// 3. Fetch Posts with JOINs
+$sql_fetch = "SELECT posts.*, users.name, crime_categories.category_name 
               FROM posts 
               LEFT JOIN users ON posts.user_id = users.id 
+              LEFT JOIN crime_categories ON posts.category_id = crime_categories.id
               ORDER BY posts.id DESC";
 
 $posts = mysqli_query($conn, $sql_fetch);
+
+// Error Handling to prevent the Fatal Error shown in your screenshot
+if (!$posts) {
+    die("Database Error: " . mysqli_error($conn));
+}
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>User Home - Crime Detection</title>
+    <title>Dashboard | Crime Detection</title>
     <style>
-        /* Custom CSS - No Bootstrap */
-        body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
-        .container { width: 600px; margin: auto; }
+        /* Modern Layout without Bootstrap */
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; display: flex; }
+        .sidebar { width: 240px; background: #1a252f; color: white; height: 100vh; position: fixed; padding: 25px; box-sizing: border-box; }
+        .main { margin-left: 240px; padding: 30px; width: 100%; max-width: 800px; }
         
-        /* Navigation/Header */
-        .header { 
-            background: #fff; padding: 15px; border-radius: 8px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        /* Post Creation Box */
-        .post-box { 
-            background: #fff; padding: 20px; border-radius: 8px; 
-            margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
-        textarea { 
-            width: 100%; padding: 10px; border: 1px solid #ddd; 
-            border-radius: 5px; resize: none; box-sizing: border-box; 
-        }
-        .btn-post { 
-            background: #1877f2; color: white; border: none; 
-            padding: 10px 20px; cursor: pointer; border-radius: 5px; margin-top: 10px; 
-        }
-        .btn-logout { 
-            background: #d32f2f; color: white; text-decoration: none; 
-            padding: 8px 15px; border-radius: 5px; font-size: 14px; 
-        }
-
-        /* Feed Styling */
-        .post { 
-            background: #fff; padding: 20px; border-radius: 8px; 
-            margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
-        .post-author { font-weight: bold; color: #1c1e21; font-size: 16px; }
-        .post-date { color: #65676b; font-size: 12px; margin-bottom: 10px; }
-        .post-image { width: 100%; border-radius: 8px; margin-top: 10px; }
-        .msg-error { color: red; text-align: center; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        
+        /* Form Elements */
+        textarea, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .btn-red { background: #e74c3c; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        
+        /* Post Feed Styling */
+        .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .author { font-weight: bold; font-size: 1.1rem; color: #2c3e50; }
+        .tag { background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; text-transform: uppercase; }
+        .status { font-size: 12px; font-weight: bold; padding: 4px 10px; border-radius: 4px; }
+        .Pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        
+        .logout-link { display: block; margin-top: 30px; color: #bdc3c7; text-decoration: none; font-size: 14px; }
+        .logout-link:hover { color: white; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="sidebar">
+    <h2 style="color: #e74c3c;">CRIME REPORT</h2>
+    <p>Logged in as:<br><strong><?php echo htmlspecialchars($user_name); ?></strong></p>
+    <a href="logout.php" class="logout-link">→ Logout</a>
+</div>
 
-    <div class="header">
-        <div>Logged in as: <strong><?php echo htmlspecialchars($user_name); ?></strong></div>
-        <a href="logout.php" class="btn-logout">Logout</a>
-    </div>
-
-    <div class="post-box">
-        <h3>Report an Incident</h3>
-        <p class="msg-error"><?php echo $msg; ?></p>
+<div class="main">
+    <div class="card">
+        <h3>Report a Crime</h3>
+        <?php if($msg): ?><p style="color: #e74c3c;"><?php echo $msg; ?></p><?php endif; ?>
+        
         <form method="post" enctype="multipart/form-data">
-            <textarea name="content" rows="3" placeholder="Describe the incident..."></textarea>
-            <br><br>
-            <label>Attach Evidence (Image):</label><br>
-            <input type="file" name="image">
-            <br>
-            <button type="submit" class="btn-post">Submit Report</button>
+            <textarea name="content" rows="3" placeholder="What happened? Provide details..."></textarea>
+            
+            <select name="category_id" required>
+                <option value="">-- Select Crime Category --</option>
+                <?php while($cat = mysqli_fetch_assoc($categories_result)): ?>
+                    <option value="<?php echo $cat['id']; ?>"><?php echo htmlspecialchars($cat['category_name']); ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <div style="margin: 10px 0;">
+                <label style="font-size: 13px; color: #666;">Attach Evidence (Image):</label><br>
+                <input type="file" name="image">
+            </div>
+            
+            <button type="submit" class="btn-red">Broadcast Alert</button>
         </form>
     </div>
 
-    <h3 style="margin-top: 30px;">Recent Crime Reports</h3>
-
     
 
-    <?php if (mysqli_num_rows($posts) > 0): ?>
-        <?php while ($row = mysqli_fetch_assoc($posts)): ?>
-            <div class="post">
-                <div class="post-author"><?php echo htmlspecialchars($row["name"]); ?></div>
-                <div class="post-date"><?php echo $row["created_at"]; ?></div>
-                
-                <p><?php echo nl2br(htmlspecialchars($row["content"])); ?></p>
-
-                <?php if (!empty($row["image"])): ?>
-                    <img src="uploads/<?php echo htmlspecialchars($row["image"]); ?>" class="post-image">
-                <?php endif; ?>
+    <h2 style="color: #34495e;">Recent Alerts</h2>
+    
+    <?php while ($row = mysqli_fetch_assoc($posts)): ?>
+        <div class="card">
+            <div class="post-header">
+                <span class="author"><?php echo htmlspecialchars($row["name"]); ?></span>
+                <span class="tag"><?php echo htmlspecialchars($row["category_name"] ?? 'General'); ?></span>
             </div>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <p style="text-align:center; color: gray;">No reports found in your area.</p>
-    <?php endif; ?>
-
+            
+            <p style="line-height: 1.6; color: #444;"><?php echo nl2br(htmlspecialchars($row["content"])); ?></p>
+            
+            <?php if ($row["image"]): ?>
+                <img src="uploads/<?php echo $row["image"]; ?>" style="width:100%; border-radius:8px; margin: 10px 0;">
+            <?php endif; ?>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <small style="color: #95a5a6;"><?php echo $row["created_at"]; ?></small>
+                <span class="status <?php echo $row['status']; ?>"><?php echo $row['status']; ?></span>
+            </div>
+        </div>
+    <?php endwhile; ?>
 </div>
 
 </body>
