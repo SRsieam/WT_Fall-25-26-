@@ -12,4 +12,3 @@ function test_input($data) {
     $data = htmlspecialchars($data);
     return mysqli_real_escape_string($conn, $data);
 }
-?>
