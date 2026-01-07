@@ -16,7 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($email) || empty($password)) {
         $msg = "Please enter email and password";
     } else {
-
         $sql = "SELECT * FROM users WHERE email = '$email'";
         $result = mysqli_query($conn, $sql);
 
@@ -41,10 +40,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Login | Crime Detection System</title>
     <style>
- 
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('loginbg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -53,12 +55,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 1);
+
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             width: 350px;
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             text-align: center;
+            backdrop-filter: blur(5px);
         }
 
         h2 { 
@@ -76,23 +80,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         label {
             display: block;
             margin-bottom: 5px;
-            color: #666;
+            color: #555;
             font-size: 14px;
+            font-weight: 600;
         }
 
         input { 
             width: 100%; 
             padding: 12px; 
-            border: 1px solid #ddd; 
+            border: 1px solid #ccc; 
             border-radius: 8px; 
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
             font-size: 15px;
+            background: rgba(255, 255, 255, 0.8);
         }
 
         input:focus {
             outline: none;
             border-color: #e74c3c;
+            box-shadow: 0 0 8px rgba(231, 76, 60, 0.2);
         }
 
         .btn-login { 
@@ -107,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-weight: bold;
             transition: background 0.3s;
             margin-top: 10px;
+            text-transform: uppercase;
         }
 
         .btn-login:hover {
@@ -119,18 +127,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 13px;
+            border: 1px solid #ffcdd2;
             display: <?php echo empty($msg) ? 'none' : 'block'; ?>;
         }
 
         .footer-links {
             margin-top: 25px;
             font-size: 14px;
-            color: #777;
+            color: #666;
         }
 
         .footer-links a {
-            color: #3498db;
+            color: #e74c3c;
             text-decoration: none;
             font-weight: bold;
         }
@@ -143,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 <div class="login-card">
-    <h2>Login</h2>
+    <h2>LOGIN</h2>
     
     <div class="error-box"><?php echo $msg; ?></div>
 
