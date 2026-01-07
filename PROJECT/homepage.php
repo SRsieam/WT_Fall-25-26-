@@ -103,7 +103,18 @@ $posts = mysqli_query($conn, $sql_fetch);
         .status { font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; }
         .Pending { background: #fff3cd; color: #856404; }
         .Resolved { background: #d4edda; color: #155724; }
-        .post-image { width: 100%; border-radius: 8px; margin: 10px 0; max-height: 400px; object-fit: cover; }
+
+    
+        .post-image { 
+            width: 100%; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+            display: block;
+            height: auto;
+            max-height: 500px; 
+            object-fit: contain; 
+            background: #000; 
+        }
     </style>
 </head>
 <body>
