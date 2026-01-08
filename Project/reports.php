@@ -8,11 +8,8 @@ $sql = "SELECT r.*, u.name as reporter_name, u.email as reporter_email
         ORDER BY r.created_at DESC";
 $result = mysqli_query($conn, $sql);
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Manage All Reports</title>
     <style>
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f6f9; display: flex; height: 100vh; }
@@ -52,14 +49,14 @@ $result = mysqli_query($conn, $sql);
 <body>
 
     <div class="sidebar">
-        <div class="sidebar-header">🛡️ Admin Panel</div>
-        <a href="dashboard.php">📊 Dashboard</a>
-        <a href="reports.php" class="active">📝 All Reports</a>
-        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">🚪 Logout</a>
+        <div class="sidebar-header">Admin Panel</div>
+        <a href="dashboard.php"> Dashboard</a>
+        <a href="reports.php" class="active"> All Reports</a>
+        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
     <div class="main-content">
-        <h2>📝 All Crime Reports</h2>
+        <h2>All Crime Reports</h2>
         
         <?php if(isset($msg)) echo $msg; ?>
 
@@ -116,8 +113,8 @@ $result = mysqli_query($conn, $sql);
         <?php 
             }
         } else {
-            echo "<p style='text-align:center; padding:20px; color:#666;'>No reports found in the database.</p>";
-        }
+            echo "<p style='text-align:center; padding:20px; color:#666;'> No reports found in the database right now</p>";
+        } 
         ?>
 
     </div>

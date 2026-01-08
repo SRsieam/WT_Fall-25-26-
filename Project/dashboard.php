@@ -2,7 +2,6 @@
 session_start();
 include 'db.php'; 
 
-
 if (isset($_POST['resolve_report'])) {
     $id = intval($_POST['report_id']);
     $sql = "UPDATE crime_reports SET status='Resolved' WHERE report_id=$id";
@@ -10,7 +9,6 @@ if (isset($_POST['resolve_report'])) {
     header("Location: dashboard.php#reports"); // Reload page at Reports section
     exit();
 }
-
 
 $total_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM crime_reports"))['c'];
 $pending_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM crime_reports WHERE status='Pending'"))['c'];
@@ -62,7 +60,7 @@ $result = mysqli_query($conn, $sql);
         <a href="#users"> Users Details</a>
         <a href="#users"> Ban or Warning</a>
         <a href="alert.php"> Send Alert</a>
-        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">🚪 Logout</a>
+        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;"> Logout</a>
     </div>
 
     <div class="main-content">
@@ -98,7 +96,8 @@ $result = mysqli_query($conn, $sql);
                             <?php } else { echo "Done"; } ?>
                         </td>
                     </tr>
-                    <?php } ?>
+                    <?php } 
+                    ?>
                 </tbody>
             </table>
         </div>
