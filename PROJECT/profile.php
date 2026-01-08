@@ -5,7 +5,8 @@ include "db.php";
 $user_id = $_SESSION["user_id"] ?? 0;
 $user_name = $_SESSION["user_name"] ?? "";
 
-if ($user_id == 0) { 
+if ($user_id == 0) 
+{ 
     header("Location: loginuser.php"); 
     exit(); 
 }
@@ -104,33 +105,44 @@ $reports = mysqli_query($conn, $sql);
     <h3>My Reported Crimes</h3>
     
     <?php
-
+    // 1. Double-check your table name. Is it 'reports', 'crimes', or 'posts'?
+    // 2. Double-check your column names. Is it 'user_id' or 'u_id'?
     $query = "SELECT * FROM reports WHERE user_id = '$user_id' ORDER BY id DESC";
     $result = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            ?>
-            
-            <div class="post-card" id="post-<?php echo $row['id']; ?>" style="background: white; padding: 20px; margin-bottom: 15px; border-radius: 10px; shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                
-                <span style="font-size: 12px; color: #888;">Report ID: #<?php echo $row['id']; ?></span>
-                <p style="font-size: 16px; color: #333;">
-                    <?php echo htmlspecialchars($row['description']); ?>
-                </p>
+    // This check prevents the Fatal Error if the query fails
+    if (!$result) {
+        echo "<p style='color:red;'>SQL Error: " . mysqli_error($conn) . "</p>";
+    } else {
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                ?>
+                <div class="post-card" id="post-<?php echo $row['id']; ?>" style="background: white; padding: 20px; margin-bottom: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <span style="font-size: 12px; color: #888;">Report ID: #<?php echo $row['id']; ?></span>
+                    <p style="font-size: 16px; color: #333;">
+                        <?php echo htmlspecialchars($row['description']); ?>
+                    </p>
 
-                <div class="actions" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-                    <button onclick="editPost(<?php echo $row['id']; ?>, '<?php echo addslashes($row['description']); ?>')" 
-                            style="background: #3498db; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">
-                        Edit
-                    </button>
-                    
-                    <button onclick="deletePost(<?php echo $row['id']; ?>)" 
-                            style="background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-left: 10px;">
-                        Delete
-                    </button>
+                    <div class="actions" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
+                        <button onclick="editPost(<?php echo $row['id']; ?>, '<?php echo addslashes($row['description']); ?>')" 
+                                style="background: #3498db; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer;">
+                            Edit
+                        </button>
+                        
+                        <button onclick="deletePost(<?php echo $row['id']; ?>)" 
+                                style="background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-left: 10px;">
+                            Delete
+                        </button>
+                    </div>
                 </div>
-            </div>
+                <?php
+            }
+        } else {
+            echo "<p>You haven't posted any reports yet.</p>";
+        }
+    }
+    ?>
+</div>
             <?php
         }
     } else {
