@@ -10,7 +10,35 @@ if ($user_id == 0) {
     exit(); 
 }
 
-$filter = $_GET['filter'] ?? 'All';
+$success = $error = "";
+$mode = $_GET['mode'] ?? 'view';
+
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    $sql = "DELETE FROM posts WHERE id=$id AND user_id=$user_id";
+    if (mysqli_query($conn, $sql)) {
+        header("Location: profile.php?mode=delete");
+        exit();
+    }
+}
+
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $content = mysqli_real_escape_string($conn, $_POST['content']);
+    $sql = "UPDATE posts SET content='$content' WHERE id=$id AND user_id=$user_id";
+    if (mysqli_query($conn, $sql)) {
+        $success = "Update successful!";
+    } else {
+        $error = mysqli_error($conn);
+    }
+}
+
+$editPost = null;
+if (isset($_GET['edit'])) {
+    $id = $_GET['edit'];
+    $result = mysqli_query($conn, "SELECT * FROM posts WHERE id=$id AND user_id=$user_id");
+    $editPost = mysqli_fetch_assoc($result);
+}
 
 $user_q = mysqli_query($conn, "SELECT * FROM users WHERE id = '$user_id'");
 $user_data = mysqli_fetch_assoc($user_q);
@@ -23,21 +51,11 @@ $total_stats = mysqli_fetch_assoc($total_q)['count'];
 $pending_stats = mysqli_fetch_assoc($pending_q)['count'];
 $resolved_stats = mysqli_fetch_assoc($resolved_q)['count'];
 
-$sql = "SELECT posts.*, crime_categories.category_name 
-        FROM posts 
-        LEFT JOIN crime_categories ON posts.category_id = crime_categories.id 
-        WHERE user_id = '$user_id'";
-
-if ($filter == 'Pending') 
-{
-    $sql .= " AND status = 'Pending'";
-} elseif ($filter == 'Resolved') 
-{
-    $sql .= " AND status = 'Resolved'";
-}
-
-$sql .= " ORDER BY posts.id DESC";
-$reports = mysqli_query($conn, $sql);
+$sql_list = "SELECT posts.*, crime_categories.category_name 
+             FROM posts 
+             LEFT JOIN crime_categories ON posts.category_id = crime_categories.id 
+             WHERE user_id = '$user_id' ORDER BY posts.id DESC";
+$reports = mysqli_query($conn, $sql_list);
 ?>
 
 <!DOCTYPE html>
@@ -46,167 +64,95 @@ $reports = mysqli_query($conn, $sql);
     <title>My Profile | Crime Detection</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; display: flex; }
-        .sidebar { width: 220px; background: #1a252f; color: white; height: 100vh; position: fixed; padding: 25px; box-sizing: border-box; }
-        .sidebar h2 { color: #e74c3c; margin-top: 0; font-size: 1.2rem; }
-        .nav-btn { display: block; background: #34495e; color: white; text-decoration: none; padding: 12px; margin-top: 10px; border-radius: 6px; font-size: 14px; transition: 0.3s; text-align: center; }
-        .nav-btn:hover { background: #e74c3c; }
+        .sidebar { width: 250px; background: #1a252f; color: white; height: 100vh; position: fixed; padding: 25px; box-sizing: border-box; }
+        .sidebar h2 { color: #e74c3c; margin-top: 0; font-size: 1.2rem; border-bottom: 1px solid #34495e; padding-bottom: 10px; }
+        .nav-btn { display: block; background: #34495e; color: white; text-decoration: none; padding: 12px; margin-top: 10px; border-radius: 6px; font-size: 14px; text-align: center; transition: 0.3s; }
         .active-btn { background: #e74c3c; }
-        .main { margin-left: 220px; padding: 40px; width: 100%; box-sizing: border-box; }
-        .profile-card { background: white; padding: 20px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .btn-edit-link { background: #34495e; color: white; text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 13px; font-weight: bold; transition: 0.3s; }
-        .btn-edit-link:hover { background: #e74c3c; }
+        .delete-btn-sidebar { background: #c0392b; border: 2px dashed #ff9999; }
+        .delete-btn-sidebar:hover { background: #a93226; }
+        .main { margin-left: 250px; padding: 40px; width: 100%; box-sizing: border-box; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid #ddd; }
-        .stat-card h1 { margin: 10px 0; color: #2c3e50; font-size: 2.2rem; }
-        .stat-card p { color: #7f8c8d; margin: 0; text-transform: uppercase; font-size: 11px; font-weight: bold; }
-        .total-card { border-color: #3498db; }
-        .pending-card { border-color: #f1c40f; }
-        .resolved-card { border-color: #2ecc71; }
-        .filter-section { background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .filter-btns a { text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 13px; color: #555; background: #eee; margin-right: 5px; transition: 0.2s; }
-        .filter-btns a.active-filter { background: #2c3e50; color: white; }
-        .table-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; text-align: center; border-bottom: 4px solid #ddd; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
         th { background: #f8f9fa; color: #333; font-size: 12px; text-transform: uppercase; }
-        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .btn-edit { color: #3498db; text-decoration: none; font-weight: bold; }
+        .btn-del { color: #e74c3c; text-decoration: none; font-weight: bold; padding: 5px 10px; border: 1px solid #e74c3c; border-radius: 4px; }
+        .btn-del:hover { background: #e74c3c; color: white; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .Pending { background: #fff3cd; color: #856404; }
         .Resolved { background: #d4edda; color: #155724; }
-        .view-link { color: #3498db; text-decoration: none; font-size: 12px; font-weight: bold; }
-        .action-edit { background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
-        .action-edit:hover { background: #219150; }
+        textarea { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; box-sizing: border-box; }
+        .save-btn { background: #2ecc71; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        .delete-highlight { border: 2px solid #e74c3c; background: #fff5f5; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <h2>CRIME REPORT</h2>
-    <p style="font-size:14px;">User Settings</p>
-    <hr style="border: 0; border-top: 1px solid #34495e; margin: 20px 0;">
     <a href="homepage.php" class="nav-btn">Dashboard</a>
-    <a href="profile.php" class="nav-btn active-btn">My Profile</a>
-    <a href="profile.php?mode=delete" class="nav-btn" style="background:#8e44ad;">Delete Reports</a>
+    <a href="profile.php" class="nav-btn <?php echo ($mode == 'view' && !$editPost) ? 'active-btn' : ''; ?>">My Profile</a>
+    <a href="profile.php?mode=delete" class="nav-btn delete-btn-sidebar <?php echo ($mode == 'delete') ? 'active-btn' : ''; ?>">Delete Reports</a>
     <a href="logout.php" class="nav-btn" style="margin-top:40px; background:#c0392b;">Logout</a>
 </div>
 
 <div class="main">
-    <div class="profile-card">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>Account Information</h3>
-            <a href="update_profile.php" class="btn-edit-link">Edit Settings ⚙️</a>
-        </div>
-        <p><strong>Name:</strong> <?php echo htmlspecialchars($user_name); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($user_data['email']); ?></p>
-        <p><strong>Location:</strong> <?php echo $user_data['district'] . ", " . $user_data['division']; ?></p>
-        <p><strong>Phone:</strong> <?php echo htmlspecialchars($user_data['phone']); ?></p>
+    <?php if ($editPost): ?>
+    <div class="card" style="border: 2px solid #3498db;">
+        <h3>Update Report #<?php echo $editPost['id']; ?></h3>
+        <form method="post">
+            <input type="hidden" name="id" value="<?php echo $editPost['id']; ?>">
+            <textarea name="content" rows="4"><?php echo htmlspecialchars($editPost['content']); ?></textarea><br><br>
+            <input type="submit" name="update" value="Save Changes" class="save-btn">
+            <a href="profile.php" style="margin-left: 15px; color: #666;">Cancel</a>
+        </form>
     </div>
+    <?php endif; ?>
+
+   
 
     <div class="stats-grid">
-        <div class="stat-card total-card"><p>Total Reports</p><h1><?php echo $total_stats; ?></h1></div>
-        <div class="stat-card pending-card"><p>Under Review</p><h1><?php echo $pending_stats; ?></h1></div>
-        <div class="stat-card resolved-card"><p>Resolved</p><h1><?php echo $resolved_stats; ?></h1></div>
+        <div class="stat-card" style="border-color: #3498db;"><p>Total</p><h1><?php echo $total_stats; ?></h1></div>
+        <div class="stat-card" style="border-color: #f1c40f;"><p>Pending</p><h1><?php echo $pending_stats; ?></h1></div>
+        <div class="stat-card" style="border-color: #2ecc71;"><p>Resolved</p><h1><?php echo $resolved_stats; ?></h1></div>
     </div>
 
-    <div class="filter-section">
-        <div class="filter-btns">
-            <a href="profile.php?filter=All" class="<?php echo $filter == 'All' ? 'active-filter' : ''; ?>">All History</a>
-            <a href="profile.php?filter=Pending" class="<?php echo $filter == 'Pending' ? 'active-filter' : ''; ?>">Pending</a>
-            <a href="profile.php?filter=Resolved" class="<?php echo $filter == 'Resolved' ? 'active-filter' : ''; ?>">Resolved</a>
-        </div>
-    </div>
+    <p style="color:green; font-weight:bold;"><?php echo $success; ?></p>
+    <p style="color:red; font-weight:bold;"><?php echo $error; ?></p>
 
-    <div class="table-card">
+    <div class="card <?php echo ($mode == 'delete') ? 'delete-highlight' : ''; ?>">
         <table>
             <thead>
                 <tr>
                     <th>Date</th>
                     <th>Category</th>
                     <th>Description</th>
-                    <th>Evidence</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if(mysqli_num_rows($reports) > 0): ?>
-                    <?php while($row = mysqli_fetch_assoc($reports)): ?>
-                    <tr id="row-<?php echo $row['id']; ?>">
-                        <td style="font-size: 13px;"><?php echo date('d M Y', strtotime($row['created_at'])); ?></td>
-                        <td><strong style="color: #2c3e50;"><?php echo htmlspecialchars($row['category_name'] ?? 'General'); ?></strong></td>
-                        <td id="desc-<?php echo $row['id']; ?>" style="max-width: 300px; font-size: 14px; color: #555;">
-                            <?php echo htmlspecialchars($row['content']); ?>
-                        </td>
-                        <td>
-                            <?php if($row['image']): ?>
-                                <a href="uploads/<?php echo $row['image']; ?>" target="_blank" class="view-link">View Proof</a>
-                            <?php else: ?>
-                                <span style="color: #bbb; font-size: 12px;">No Image</span>
-                            <?php endif; ?>
-                        </td>
-                        <td><span class="status-badge <?php echo $row['status']; ?>"><?php echo $row['status']; ?></span></td>
-                        <td>
-                            <button onclick="editContent(<?php echo $row['id']; ?>)" class="action-edit">Edit</button>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr><td colspan="6" style="text-align: center; padding: 50px; color: #999;">No contributions found.</td></tr>
-                <?php endif; ?>
+                <?php while($row = mysqli_fetch_assoc($reports)): ?>
+                <tr>
+                    <td><?php echo date('d M Y', strtotime($row['created_at'])); ?></td>
+                    <td><strong><?php echo htmlspecialchars($row['category_name'] ?? 'General'); ?></strong></td>
+                    <td><?php echo htmlspecialchars($row['content']); ?></td>
+                    <td><span class="status-badge <?php echo $row['status']; ?>"><?php echo $row['status']; ?></span></td>
+                    <td>
+                        <?php if ($mode == 'delete'): ?>
+                            <a href="?delete=<?php echo $row['id']; ?>" class="btn-del" onclick="return confirm('Are you sure?')">Confirm Delete</a>
+                        <?php else: ?>
+                            <a href="?edit=<?php echo $row['id']; ?>" class="btn-edit">Edit</a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php endwhile; ?>
             </tbody>
         </table>
     </div>
 </div>
-
-<script>
-function editContent(postId) 
-{
-    var currentText = document.getElementById("desc-" + postId).innerText.trim();
-    var newText = prompt("Update your post", currentText);
-    
-    if (newText == null || newText == "" || newText == currentText) return;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "manage_post.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function() 
-    {
-        if (xhr.readyState == 4 && xhr.status == 200) //200 successful
-            {
-            var res = JSON.parse(xhr.responseText);
-            if (res.status == "success") {
-
-                document.getElementById("desc-" + postId).innerText = newText;
-                alert("Updated successfully!");
-            } else {
-                alert("Error: " + res.message);
-            }
-        }
-    };
-    xhr.send("action=update&post_id=" + postId + "&content=" + encodeURIComponent(newText));
-}
-function deletePost(postId) {
-    if (!confirm("Are you sure you want to permanently delete this report?")) return;
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "manage_post.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            var res = JSON.parse(xhr.responseText);
-            if (res.status == "success") 
-            {
-                var row = document.getElementById("row-" + postId);
-                row.parentNode.removeChild(row);
-                alert("Post deleted successfully.");
-            } else {
-                alert("Error: " + res.message);
-            }
-        }
-    };
-    xhr.send("action=delete&post_id=" + postId);
-}
-</script>
-
 
 </body>
 </html>
