@@ -136,7 +136,7 @@ if (isset($_POST['login_btn'])) {
             <div class="error-msg"><?php echo $error; ?></div>
         <?php endif; ?>
 
-        <form action="dashboard.php" method="POST">
+        <form action="" method="POST">
             <div class="form-group">
                 <label>Email Address</label>
                 <input type="email" name="email" placeholder="admin@example.com" required>
