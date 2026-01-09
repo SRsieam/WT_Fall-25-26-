@@ -15,9 +15,8 @@ if (isset($_POST['login_btn'])) {
 
         $row = mysqli_fetch_assoc($result);
 
-        $_SESSION['admin_id'] = $row['admin_id'];
-        $_SESSION['admin_email'] = $row['email'];
         $_SESSION['is_admin_logged_in'] = true;
+        $_SESSION['admin_email'] = $row['email']
 
         header("Location: dashboard.php");
 
