@@ -6,7 +6,7 @@ if (isset($_POST['resolve_report'])) {
     $id = intval($_POST['report_id']);
     $sql = "UPDATE crime_reports SET status='Resolved' WHERE report_id=$id";
     mysqli_query($conn, $sql);
-    header("Location: dashboard.php#reports"); // Reload page at Reports section
+    header("Location: dashboard.php#reports");
     exit();
 }
 
