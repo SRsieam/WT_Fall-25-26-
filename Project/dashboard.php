@@ -10,12 +10,12 @@ if (isset($_POST['resolve_report'])) {
     exit();
 }
 
-$total_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM crime_reports"))['c'];
-$pending_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM crime_reports WHERE status='Pending'"))['c'];
+$total_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM reports"))['c'];
+$pending_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM reports WHERE status='Pending'"))['c'];
 $total_users = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM users"))['c'];
 
 $sql = "SELECT r.*, u.name as reporter_name 
-        FROM crime_reports r 
+        FROM reports r 
         JOIN users u ON r.user_id = u.user_id 
         ORDER BY r.created_at DESC";
 $result = mysqli_query($conn, $sql);
@@ -58,7 +58,7 @@ $result = mysqli_query($conn, $sql);
         <a href="dashboard.php" class="active"> Dashboard</a>
         <a href="reports.php"> Reports</a>
         <a href="users_details.php"> Users Details</a>
-        <a href="#users"> Ban or Warning</a>
+        <a href="ban_warning.php"> Ban or Warning</a>
         <a href="alert.php"> Send Alert</a>
         <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
