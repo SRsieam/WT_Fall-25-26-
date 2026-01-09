@@ -16,10 +16,9 @@ if (isset($_POST['login_btn'])) {
         $row = mysqli_fetch_assoc($result);
 
         $_SESSION['is_admin_logged_in'] = true;
-        $_SESSION['admin_email'] = $row['email']
+        $_SESSION['admin_email'] = $row['email'];
 
         header("Location: dashboard.php");
-
         exit();
 
     } else {
@@ -90,7 +89,7 @@ if (isset($_POST['login_btn'])) {
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Ensures padding doesn't widen width */
+            box-sizing: border-box;
             font-size: 1rem;
         }
 
@@ -137,7 +136,7 @@ if (isset($_POST['login_btn'])) {
             <div class="error-msg"><?php echo $error; ?></div>
         <?php endif; ?>
 
-        <form action="login.php" method="POST">
+        <form action="dashboard.php" method="POST">
             <div class="form-group">
                 <label>Email Address</label>
                 <input type="email" name="email" placeholder="admin@example.com" required>
