@@ -68,6 +68,16 @@
     </style>
 </head>
 <body>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">Admin Panel</div>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="reports.php">Reports</a>
+        <a href="users.php">Users Details</a>
+        <a href="ban_warning.php" class="active">Ban or Warning</a>
+        <a href="alert.php">Send Alert</a>
+        <a href="logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+    </div>
 
 
 </body>
