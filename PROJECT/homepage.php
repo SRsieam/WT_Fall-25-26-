@@ -235,6 +235,6 @@ function sendMessage()
 setInterval(fetchChat, 3000);
 window.onload = fetchChat;
 </script>
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBsnn0ZmcSODM68Vx2LBCHp3MvpKKXR_kQ&callback=initMap" async defer></script>
 </body>
 </html>
