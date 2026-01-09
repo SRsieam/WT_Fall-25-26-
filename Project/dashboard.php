@@ -23,7 +23,6 @@ $result = mysqli_query($conn, $sql);
 
 <!DOCTYPE html>
 <head>
-    <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <style>
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f6f9; display: flex; height: 100vh; }
