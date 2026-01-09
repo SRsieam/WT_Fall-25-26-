@@ -1,48 +1,50 @@
 <?php
 session_start();
 include 'db.php'; 
-
-$sql = "SELECT r.*, u.name as reporter_name, u.email as reporter_email 
-        FROM crime_reports r 
-        LEFT JOIN users u ON r.user_id = u.user_id 
-        ORDER BY r.created_at DESC";
-$result = mysqli_query($conn, $sql);
 ?>
+
 <!DOCTYPE html>
 <head>
     <title>Manage All Reports</title>
     <style>
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f6f9; display: flex; height: 100vh; }
         
-        .sidebar { width: 250px; background: #343a40; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; font-weight: bold; background: #212529; text-align: center; font-size: 1.2rem; }
-        .sidebar a { display: block; padding: 15px 20px; color: #c2c7d0; text-decoration: none; border-bottom: 1px solid #3f474e; transition: 0.3s; }
-        .sidebar a:hover { background: #007bff; color: white; padding-left: 25px; }
-        .sidebar a.active { background: #007bff; color: white; }
+        .sidebar { 
+            width: 250px; 
+            background: #343a40; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0; }
+        .sidebar-header { 
+            padding: 20px; 
+            font-weight: bold; 
+            background: #212529; 
+            text-align: center; 
+            font-size: 1.2rem; }
+        .sidebar a { 
+            display: block; 
+            padding: 15px 20px; 
+            color: #c2c7d0; 
+            text-decoration: none; 
+            border-bottom: 1px solid #3f474e; 
+            transition: 0.3s; }
+        .sidebar a:hover { 
+            background: #007bff; 
+            color: white; 
+            padding-left: 25px; }
+        /*.sidebar a.active { 
+            background: #007bff; 
+            color: white; }*/
 
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; }
-        h2 { border-bottom: 2px solid #ddd; padding-bottom: 10px; color: #333; }
-
-        .alert { padding: 10px 15px; border-radius: 4px; margin-bottom: 20px; }
-        .alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        .report-card { background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
-        .report-header { background: #f8f9fa; padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-        .report-body { padding: 20px; }
-        .report-footer { background: #f1f1f1; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-
-        .meta-info { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
-        .badge { padding: 5px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; }
-        .badge-pending { background: #ffeeba; color: #856404; }
-        .badge-resolved { background: #d4edda; color: #155724; }
-        
-        button { cursor: pointer; padding: 8px 12px; border: none; border-radius: 4px; font-weight: bold; transition: 0.2s; }
-        .btn-approve { background: #28a745; color: white; }
-        .btn-approve:hover { background: #218838; }
-        .btn-delete { background: #dc3545; color: white; }
-        .btn-delete:hover { background: #c82333; }
-        .btn-disabled { background: #ccc; cursor: not-allowed; color: #666; }
+        .main-content { 
+            flex-grow: 1; 
+            padding: 30px; 
+            overflow-y: auto; }
+        h2 { 
+            border-bottom: 2px solid #ddd; 
+            padding-bottom: 10px; 
+            color: #333; }
 
     </style>
 </head>
