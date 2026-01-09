@@ -56,11 +56,11 @@ $result = mysqli_query($conn, $sql);
     <div class="sidebar">
         <div class="sidebar-header"> Admin Panel</div>
         <a href="dashboard.php" class="active"> Dashboard</a>
-        <a href="#reports"> Reports</a>
-        <a href="#users"> Users Details</a>
+        <a href="reports.php"> Reports</a>
+        <a href="users_details.php"> Users Details</a>
         <a href="#users"> Ban or Warning</a>
         <a href="alert.php"> Send Alert</a>
-        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;"> Logout</a>
+        <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
     <div class="main-content">
