@@ -60,6 +60,7 @@ $result = mysqli_query($conn, $sql);
         <a href="users_details.php"> Users Details</a>
         <a href="ban_warning.php"> Ban or Warning</a>
         <a href="alert.php"> Send Alert</a>
+        <a href="#map"> Map</a>
         <a href="login.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
