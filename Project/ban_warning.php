@@ -106,7 +106,7 @@ if (isset($_POST['ban_user'])) {
         <a href="users.php">Users Details</a>
         <a href="ban_warning.php" class="active">Ban or Warning</a>
         <a href="alert.php">Send Alert</a>
-        <a href="logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+        <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
     <div class="main-content">
