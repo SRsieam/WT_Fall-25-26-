@@ -1,3 +1,30 @@
+<?php
+session_start();
+include 'db.php';
+
+$msg = "";
+$prefill_id = "";
+
+if (isset($_GET['user_id'])) {
+    $prefill_id = intval($_GET['user_id']);
+}
+if (isset($_POST['ban_user'])) {
+    $user_id = intval($_POST['user_id']);
+    $action_type = $_POST['action']; 
+    
+    $status = ($action_type == 'ban') ? 'Banned' : 'Suspended';
+    
+    $sql = "UPDATE users SET status='$status' WHERE user_id=$user_id";
+    if(mysqli_query($conn, $sql)) {
+        $msg = "User #$user_id has been updated to: $status";
+    } else {
+        $msg = "Error updating user.";
+    }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <head>
     <title>Ban or Suspend</title>
@@ -77,6 +104,30 @@
         <a href="ban_warning.php" class="active">Ban or Warning</a>
         <a href="alert.php">Send Alert</a>
         <a href="logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+    </div>
+
+    <div class="main-content">
+        <h2>Manage User Status</h2>
+        
+        <?php if($msg): ?>
+            <div class="alert"><?php echo $msg; ?></div>
+        <?php endif; ?>
+
+        <div class="form-card">
+            <h3>Ban A User</h3>
+            <form action="" method="POST">
+                <label>User ID:</label>
+                <input type="number" name="user_id" value="<?php echo $prefill_id; ?>" placeholder="Enter User ID manually" required>
+                
+                <label>Action:</label>
+                <select name="action">
+                    <option value="ban">Ban User Permanently</option>
+                    <option value="suspend">Suspend for 7 Days</option>
+                </select>
+
+                <button type="submit" name="ban_user" class="btn-danger">Apply Action</button>
+            </form>
+        </div>
     </div>
 
 
