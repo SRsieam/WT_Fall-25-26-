@@ -2,6 +2,11 @@
 session_start();
 include 'db.php';
 
+if (!isset($_SESSION['is_admin_logged_in'])) {
+    header("Location: admin_login.php");
+    exit();
+}
+
 $msg = "";
 $prefill_id = "";
 
@@ -22,8 +27,6 @@ if (isset($_POST['ban_user'])) {
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <head>
