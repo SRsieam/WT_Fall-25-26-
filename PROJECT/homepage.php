@@ -15,7 +15,7 @@ $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['searc
 $filter_cat = isset($_GET['filter_cat']) ? mysqli_real_escape_string($conn, $_GET['filter_cat']) : "";
 $filter_date = isset($_GET['filter_date']) ? mysqli_real_escape_string($conn, $_GET['filter_date']) : "";
 
-$cat_query = "SELECT * FROM crime_categories ORDER BY category_name ASC";
+$cat_query = "SELECT * FROM categories ORDER BY category_name ASC";
 $categories_result = mysqli_query($conn, $cat_query);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_post'])) {
@@ -58,10 +58,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_post'])) {
     }
 }
 
-$sql_fetch = "SELECT posts.*, users.name, crime_categories.category_name 
+$sql_fetch = "SELECT posts.*, users.name, categories.category_name 
               FROM posts 
               LEFT JOIN users ON posts.user_id = users.id 
-              LEFT JOIN crime_categories ON posts.category_id = crime_categories.id
+              LEFT JOIN categories ON posts.category_id = categories.id
               WHERE 1=1"; 
 
 if ($search != "") { $sql_fetch .= " AND (posts.content LIKE '%$search%' OR users.name LIKE '%$search%')"; }
@@ -71,7 +71,6 @@ if ($filter_date != "") { $sql_fetch .= " AND DATE(posts.created_at) = '$filter_
 $sql_fetch .= " ORDER BY posts.id DESC";
 $posts = mysqli_query($conn, $sql_fetch);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,8 +96,8 @@ $posts = mysqli_query($conn, $sql_fetch);
         .tag { background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 10px; text-transform: uppercase; }
         .status { font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; }
         .Pending { background: #fff3cd; color: #856404; }
+        .Resolved { background: #d4edda; color: #155724; }
         .post-image { width: 100%; border-radius: 8px; margin: 10px 0; max-height: 400px; object-fit: contain; background: #000; }
-        
         #mapModal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
         .modal-content { background: white; margin: 5% auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 10px; }
         #map { height: 400px; width: 100%; border-radius: 8px; }
@@ -205,10 +204,8 @@ function fetchChat() {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "chat_handler.php", true);
     xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) 
-        {
-            try 
-            {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            try {
                 var data = JSON.parse(xhr.responseText);
                 var html = "";
                 data.forEach(function(m) {
@@ -221,15 +218,15 @@ function fetchChat() {
     xhr.send();
 }
 
-function sendMessage() 
-{
+function sendMessage() {
     var el = document.getElementById("chat-input");
     if (el.value.trim() == "") return;
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "chat_handler.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("message=" + encodeURIComponent(el.value));
-    el.value = ""; fetchChat();
+    el.value = ""; 
+    setTimeout(fetchChat, 500);
 }
 
 setInterval(fetchChat, 3000);
