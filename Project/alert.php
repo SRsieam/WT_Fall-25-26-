@@ -100,6 +100,16 @@ $msg = "";
     </style>
 </head>
 <body>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">Admin Panel</div>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="reports.php">Reports</a>
+        <a href="users_details.php">Users Details</a>
+        <a href="ban_warning.php">Ban or Warning</a>
+        <a href="alert.php" class="active">Send Alert</a>
+        <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+    </div>
 
 </body>
 </html>
