@@ -20,13 +20,44 @@ if (!isset($_SESSION['is_admin_logged_in'])) {
             width: 100%; 
             border-collapse: collapse; 
             background: white; }
-        th, td { 
+        th { 
+            padding: 10px; 
+            border-bottom: 1px solid #ddd; 
+            text-align: center;
+            background: #343a40; 
+            color: white; }
+        td {
             padding: 10px; 
             border-bottom: 1px solid #ddd; 
             text-align: center; }
-        th { 
+        tr:hover { 
+            background: #f1f1f1; }
+
+
+        .sidebar { 
+            width: 250px; 
             background: #343a40; 
-            color: white; }
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0; }
+        .sidebar-header { 
+            padding: 20px; 
+            font-weight: bold; 
+            background: #212529; 
+            text-align: center; 
+            font-size: 1.2rem; }
+        .sidebar a { 
+            display: block; 
+            padding: 15px 20px; 
+            color: #c2c7d0; 
+            text-decoration: none; 
+            border-bottom: 1px solid #3f474e; 
+            transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { 
+            background: #007bff; 
+            color: white; 
+            padding-left: 25px; }
         .status-active { 
             color: green; 
             font-weight: bold; }
@@ -50,7 +81,7 @@ if (!isset($_SESSION['is_admin_logged_in'])) {
             text-decoration: none;
             background: #343a40;
             color: white;
-            padding: 8px 14px;
+            padding: 5px 14px;
             border-radius: 4px;
             font-size: 0.9rem;
             transition: 0.3s;}
@@ -62,6 +93,26 @@ if (!isset($_SESSION['is_admin_logged_in'])) {
 
 </head>
 <body>
+    <h2> All Users Details</h2>
+<a href="dashboard.php" class="back-btn"> Back</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Register Date</th>
+            <th>Total Posts</th>
+            <th>Solved Posts</th>
+            <th>Pending Posts</th>
+            <th>Last Post Date</th>
+            <th>Banned</th>
+        </tr>
+    </thead>
+ 
+</table>
 
 </body>
 </html>
