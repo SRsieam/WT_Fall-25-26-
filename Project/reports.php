@@ -1,6 +1,35 @@
 <?php
 session_start();
 include 'db.php'; 
+
+if (!isset($_SESSION['is_admin_logged_in'])) {
+    header("Location: admin_login.php");
+    exit();
+}
+
+$msg = "";
+
+if (isset($_POST['approve_report'])) {
+    $id = intval($_POST['report_id']);
+    $sql = "UPDATE reports SET status='Resolved' WHERE report_id=$id";
+    if (mysqli_query($conn, $sql)) {
+        $msg = "<div class='alert success'>Report #$id marked as Resolved</div>";
+    }
+}
+
+if (isset($_POST['delete_report'])) {
+    $id = intval($_POST['report_id']);
+    $sql = "DELETE FROM reports WHERE report_id=$id";
+    if (mysqli_query($conn, $sql)) {
+        $msg = "<div class='alert danger'>Report #$id has been deleted</div>";
+    }
+}
+
+$sql = "SELECT r.*, u.name as reporter_name, u.email as reporter_email 
+        FROM reports r 
+        JOIN users u ON r.user_id = u.user_id 
+        ORDER BY r.created_at DESC";
+$result = mysqli_query($conn, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +78,18 @@ include 'db.php';
     </style>
 </head>
 <body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">Admin Panel</div>
+        <a href="dashboard.php">Dashboard</a>
+        <a href="reports.php" class="active">All Reports</a>
+        <a href="users_details.php">Users Details</a>
+        <a href="ban_warning.php">Ban or Warning</a>
+        <a href="alert.php">Send Alert</a>
+        <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+    </div>
+
+    
 
 </body>
 </html>
