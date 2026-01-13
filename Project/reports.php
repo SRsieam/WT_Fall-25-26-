@@ -133,6 +133,20 @@ $result = mysqli_query($conn, $sql);
                 </div>
                 <div><?php echo $statusBadge; ?></div>
             </div>
+            <div class="report-body">
+                <p><strong> Location:</strong> <?php echo htmlspecialchars($location_display); ?></p>
+                <p><strong> Date:</strong> <?php echo date('F j, Y, g:i a', strtotime($row['created_at'])); ?></p>
+                
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; color: #444; line-height: 1.5;">
+                    <?php echo nl2br(htmlspecialchars($row['content'])); ?>
+                </div>
+
+                <?php if(!empty($row['image'])): ?>
+                    <div style="margin-top:10px;">
+                        <a href="uploads/<?php echo $row['image']; ?>" target="_blank" style="color:#007bff; text-decoration:none;">📷 View Attached Image</a>
+                    </div>
+                <?php endif; ?>
+            </div>
 
         </div>
 
