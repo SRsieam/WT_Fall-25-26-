@@ -11,7 +11,7 @@ $msg = "";
 
 if (isset($_POST['approve_report'])) {
     $id = intval($_POST['report_id']);
-    $sql = "UPDATE reports SET status='Resolved' WHERE report_id=$id";
+    $sql = "UPDATE posts SET status='Resolved' WHERE id=$id";
     if (mysqli_query($conn, $sql)) {
         $msg = "<div class='alert success'>Report #$id marked as Resolved</div>";
     }
@@ -19,16 +19,17 @@ if (isset($_POST['approve_report'])) {
 
 if (isset($_POST['delete_report'])) {
     $id = intval($_POST['report_id']);
-    $sql = "DELETE FROM reports WHERE report_id=$id";
+    $sql = "DELETE FROM posts WHERE id=$id";
     if (mysqli_query($conn, $sql)) {
         $msg = "<div class='alert danger'>Report #$id has been deleted</div>";
     }
 }
 
-$sql = "SELECT r.*, u.name as reporter_name, u.email as reporter_email 
-        FROM reports r 
-        JOIN users u ON r.user_id = u.user_id 
-        ORDER BY r.created_at DESC";
+$sql = "SELECT p.*, u.name as reporter_name, u.email as reporter_email, c.category_name 
+        FROM posts p 
+        JOIN users u ON p.user_id = u.id 
+        LEFT JOIN categories c ON p.category_id = c.id
+        ORDER BY p.created_at DESC";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -62,9 +63,10 @@ $result = mysqli_query($conn, $sql);
             background: #007bff; 
             color: white; 
             padding-left: 25px; }
-        /*.sidebar a.active { 
-            background: #007bff; 
-            color: white; }*/
+        .sidebar a.active { 
+             background: #007bff; 
+             color: white; 
+        }
 
         .main-content { 
             flex-grow: 1; 
@@ -74,7 +76,21 @@ $result = mysqli_query($conn, $sql);
             border-bottom: 2px solid #ddd; 
             padding-bottom: 10px; 
             color: #333; }
-
+        
+        .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        .report-card { background: white; border-left: 5px solid #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; border-radius: 4px; padding: 20px; }
+        .report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .meta-info { display: block; font-size: 0.85rem; color: #666; margin-top: 5px; }
+        .badge { padding: 5px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8rem; }
+        .badge-resolved { background: #d4edda; color: #155724; }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .report-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
+        .btn-approve { background: #28a745; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; }
+        .btn-disabled { background: #ccc; color: white; border: none; padding: 8px 12px; cursor: not-allowed; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -88,8 +104,6 @@ $result = mysqli_query($conn, $sql);
         <a href="alert.php">Send Alert</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
-
-    
 
 </body>
 </html>
