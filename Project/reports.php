@@ -120,8 +120,20 @@ $result = mysqli_query($conn, $sql);
         ?>
         
        <div class="report-card" style="border-left-color: <?php echo $isResolved ? '#28a745' : '#ffc107'; ?>;">
-            
-            
+            <div class="report-header">
+                <div>
+                    <strong style="font-size: 1.1rem;">
+                        <?php echo $row['id']; ?>: 
+                        <?php echo htmlspecialchars(substr($row['content'], 0, 80)); ?>
+                    </strong>
+                    <span class="meta-info">
+                        Posted by: <strong><?php echo htmlspecialchars($row['reporter_name']); ?></strong> 
+                        < <?php echo htmlspecialchars($row['reporter_email']); ?> >
+                    </span>
+                </div>
+                <div><?php echo $statusBadge; ?></div>
+            </div>
+
         </div>
 
         <?php 
