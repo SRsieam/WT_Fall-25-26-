@@ -4,20 +4,20 @@ include 'db.php';
 
 if (isset($_POST['resolve_report'])) {
     $id = intval($_POST['report_id']);
-    $sql = "UPDATE crime_reports SET status='Resolved' WHERE report_id=$id";
+    $sql = "UPDATE posts SET status='Resolved' WHERE id=$id";
     mysqli_query($conn, $sql);
     header("Location: dashboard.php#reports");
     exit();
 }
 
-$total_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM reports"))['c'];
-$pending_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM reports WHERE status='Pending'"))['c'];
+$total_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM posts"))['c'];
+$pending_reports = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM posts WHERE status='Pending'"))['c'];
 $total_users = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM users"))['c'];
 
-$sql = "SELECT r.*, u.name as reporter_name 
-        FROM reports r 
-        JOIN users u ON r.user_id = u.user_id 
-        ORDER BY r.created_at DESC";
+$sql = "SELECT p.*, u.name as reporter_name 
+        FROM posts p 
+        JOIN users u ON p.user_id = u.id 
+        ORDER BY p.created_at DESC";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -76,21 +76,23 @@ $result = mysqli_query($conn, $sql);
         <div class="table-container">
             <table>
                 <thead>
-                    <tr><th>ID</th><th>Reporter</th><th>Title</th><th>Status</th><th>Action</th></tr>
+                    <tr><th>ID</th><th>Reporter</th><th>Content</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)) { 
                         $statusClass = ($row['status'] == 'Resolved') ? 'status-resolved' : 'status-pending';
                     ?>
                     <tr>
-                        <td>#<?php echo $row['report_id']; ?></td>
+                        <td>#<?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['reporter_name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['title']); ?></td>
+                        
+                        <td><?php echo htmlspecialchars(substr($row['content'], 0, 50)) . '...'; ?></td>
+                        
                         <td><span class="<?php echo $statusClass; ?>"><?php echo $row['status']; ?></span></td>
                         <td>
                             <?php if($row['status'] == 'Pending') { ?>
                                 <form action="dashboard.php" method="POST">
-                                    <input type="hidden" name="report_id" value="<?php echo $row['report_id']; ?>">
+                                    <input type="hidden" name="report_id" value="<?php echo $row['id']; ?>">
                                     <button type="submit" name="resolve_report" class="btn-green">Resolve</button>
                                 </form>
                             <?php } else { echo "Done"; } ?>
