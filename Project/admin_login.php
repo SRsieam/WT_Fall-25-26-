@@ -8,7 +8,12 @@ if (isset($_POST['login_btn'])) {
 
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $sql = "SELECT * FROM admins WHERE email='$email' AND password='$password'";
+
+    // --- CORRECTION HERE ---
+    // In your crimealert.sql file, the table is named 'admin' (singular), not 'admins'.
+    $sql = "SELECT * FROM admin WHERE email='$email' AND password='$password'"; 
+    // -----------------------
+
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) == 1) {
