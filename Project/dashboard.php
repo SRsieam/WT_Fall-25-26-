@@ -59,7 +59,7 @@ $result = mysqli_query($conn, $sql);
         <a href="users_details.php"> Users Details</a>
         <a href="ban_warning.php"> Ban or Warning</a>
         <a href="alert.php"> Send Alert</a>
-        <a href="#map"> Map</a>
+        <a href="map.php"> Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
@@ -83,7 +83,7 @@ $result = mysqli_query($conn, $sql);
                         $statusClass = ($row['status'] == 'Resolved') ? 'status-resolved' : 'status-pending';
                     ?>
                     <tr>
-                        <td>#<?php echo $row['id']; ?></td>
+                        <td><?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['reporter_name']); ?></td>
                         
                         <td><?php echo htmlspecialchars(substr($row['content'], 0, 50)) . '...'; ?></td>
