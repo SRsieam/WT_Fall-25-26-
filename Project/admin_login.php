@@ -8,18 +8,12 @@ if (isset($_POST['login_btn'])) {
 
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
-
-    // --- CORRECTION HERE ---
-    // In your crimealert.sql file, the table is named 'admin' (singular), not 'admins'.
     $sql = "SELECT * FROM admin WHERE email='$email' AND password='$password'"; 
-    // -----------------------
-
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) == 1) {
 
         $row = mysqli_fetch_assoc($result);
-
         $_SESSION['is_admin_logged_in'] = true;
         $_SESSION['admin_email'] = $row['email'];
 
@@ -31,16 +25,11 @@ if (isset($_POST['login_btn'])) {
         $error = "Invalid Email or Password";
 
     }
-
 }
-
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <style>
         body {
@@ -62,7 +51,7 @@ if (isset($_POST['login_btn'])) {
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
-            border-top: 5px solid #343a40; /* Admin Dark Theme */
+            border-top: 5px solid #343a40; 
         }
 
         .login-card h2 {
