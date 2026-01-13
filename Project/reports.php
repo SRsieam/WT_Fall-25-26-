@@ -148,6 +148,28 @@ $result = mysqli_query($conn, $sql);
                 <?php endif; ?>
             </div>
 
+            <div class="report-footer">
+                <div style="font-size: 0.9rem; color: #555;">
+                   Type: <strong><?php echo htmlspecialchars(ucfirst($row['category_name'] ?? 'General')); ?></strong>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <?php if (!$isResolved): ?>
+                    <form action="" method="POST" style="margin:0;">
+                        <input type="hidden" name="report_id" value="<?php echo $row['id']; ?>">
+                        <button type="submit" name="approve_report" class="btn-approve"> Mark Resolved</button>
+                    </form>
+                    <?php else: ?>
+                        <button class="btn-disabled" disabled> Resolved</button>
+                    <?php endif; ?>
+
+                    <form action="" method="POST" style="margin:0;" onsubmit="return confirm('Permanently delete this report?');">
+                        <input type="hidden" name="report_id" value="<?php echo $row['id']; ?>">
+                        <button type="submit" name="delete_report" class="btn-delete"> Delete</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
         <?php 
