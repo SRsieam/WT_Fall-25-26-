@@ -105,5 +105,33 @@ $result = mysqli_query($conn, $sql);
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
+    <div class="main-content">
+        <h2>All Crime Reports</h2>
+        
+        <?php echo $msg; ?>
+
+        <?php 
+        if (mysqli_num_rows($result) > 0) {
+            while($row = mysqli_fetch_assoc($result)) {
+                $isResolved = ($row['status'] == 'Resolved');
+                $statusBadge = $isResolved ? '<span class="badge badge-resolved">Resolved</span>' : '<span class="badge badge-pending">Pending</span>';
+
+                $location_display = "Lat: " . ($row['lat'] ?? 'N/A') . ", Lng: " . ($row['lng'] ?? 'N/A');
+        ?>
+        
+       <div class="report-card" style="border-left-color: <?php echo $isResolved ? '#28a745' : '#ffc107'; ?>;">
+            
+            
+        </div>
+
+        <?php 
+            }
+        } else {
+            echo "<div style='text-align:center; padding:40px; color:#666; font-size:1.1rem;'>No reports found in the database.</div>";
+        } 
+        ?>
+
+    </div>
+
 </body>
 </html>
