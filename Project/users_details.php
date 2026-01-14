@@ -124,6 +124,7 @@ if (!$result) {
                 <th>Ban/Warning</th> 
             </tr>
         </thead>
+        <tbody>
             <?php while($row = mysqli_fetch_assoc($result)) { 
                 $pending = $row['total_posts'] - $row['solved_posts'];
                 
@@ -139,6 +140,29 @@ if (!$result) {
                     $status_class = 'status-suspended';
                 }
             ?>
+            <tr>
+                <td><?php echo $row['user_id']; ?></td>
+                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                <td><?php echo htmlspecialchars($row['phone']); ?></td>
+                <td><?php echo $row['register_date']; ?></td>
+                <td><?php echo $row['total_posts']; ?></td>
+                <td><span class="badge badge-solved"><?php echo $row['solved_posts']; ?></span></td>
+                <td><span class="badge badge-pending"><?php echo $pending; ?></span></td>
+                <td>
+                    <?php 
+                        echo $row['last_post_date'] 
+                        ? date('Y-m-d H:i', strtotime($row['last_post_date']))
+                        : "No posts"; 
+                    ?>
+                </td>
+                <td>
+                    <span class="<?php echo $status_class; ?>"><?php echo $display_status; ?></span>
+                </td>
+            </tr>
+            <?php 
+            } ?>
+        </tbody>
     </table>
 
 </body>
