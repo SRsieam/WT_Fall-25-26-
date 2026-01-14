@@ -57,7 +57,13 @@ if (!$result) {
         tr:hover { 
             background: #f8f9fa; }
 
-        .sidebar { width: 250px; background: #343a40; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar { 
+            width: 250px; 
+            background: #343a40; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0; }
         
         .status-banned { 
             color: #dc3545;
@@ -118,7 +124,21 @@ if (!$result) {
                 <th>Ban/Warning</th> 
             </tr>
         </thead>
-        
+            <?php while($row = mysqli_fetch_assoc($result)) { 
+                $pending = $row['total_posts'] - $row['solved_posts'];
+                
+                $role = $row['role'];
+                $display_status = '-';
+                $status_class = 'status-dash';
+
+                if ($role == 'Banned') {
+                    $display_status = 'Banned';
+                    $status_class = 'status-banned';
+                } elseif ($role == 'Suspended') {
+                    $display_status = 'Suspended';
+                    $status_class = 'status-suspended';
+                }
+            ?>
     </table>
 
 </body>
