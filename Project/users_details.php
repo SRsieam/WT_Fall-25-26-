@@ -7,16 +7,15 @@ if (!isset($_SESSION['is_admin_logged_in'])) {
     exit();
 }
 
-// --- SQL QUERY ---
-// Added u.last_login and u.last_logout to the select list
+
 $sql = "SELECT 
             u.id as user_id, 
             u.name, 
             u.email, 
             u.phone, 
             u.role,
-            u.last_login,   /* <--- NEW */
-            u.last_logout,  /* <--- NEW */
+            u.last_login,   
+            u.last_logout, 
             'N/A' as register_date, 
             COUNT(p.id) as total_posts,
             SUM(CASE WHEN p.status = 'Resolved' THEN 1 ELSE 0 END) as solved_posts,
@@ -63,7 +62,6 @@ if (!$result) {
 
         .sidebar { width: 250px; background: #343a40; color: white; display: flex; flex-direction: column; flex-shrink: 0; }
         
-        /* Status Badges */
         .status-banned { color: #dc3545; font-weight: bold; }
         .status-suspended { color: #fd7e14; font-weight: bold; }
         .status-dash { font-weight: bold; color: #6c757d; }
@@ -109,7 +107,6 @@ if (!$result) {
             <?php while($row = mysqli_fetch_assoc($result)) { 
                 $pending = $row['total_posts'] - $row['solved_posts'];
                 
-                // --- Logic for Ban/Warning Column ---
                 $role = $row['role'];
                 $display_status = '-';
                 $status_class = 'status-dash';
