@@ -35,7 +35,7 @@
                         $statusClass = ($row['status'] == 'Resolved') ? 'status-resolved' : 'status-pending';
                     ?>
                     <tr>
-                        <td>#<?php echo $row['id']; ?></td>
+                        <td><?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['reporter_name']); ?></td>
                        
                         <td><?php echo htmlspecialchars(substr($row['content'], 0, 50)) . '...'; ?></td>
