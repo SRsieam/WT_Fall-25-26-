@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <title>Send Broadcast Alert</title>
     <link rel="stylesheet" href="../css/admin_alert.css">
@@ -13,7 +12,6 @@
         <a href="admin_users_details_controller.php">Users Details</a>
         <a href="admin_ban_warning_controller.php">Ban or Warning</a>
         <a href="admin_alert_controller.php" class="active">Send Alert</a>
-        <a href="admin_map_controller.php">Live Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
@@ -31,17 +29,17 @@
             <form action="admin_alert_controller.php" method="POST">
                 <label>Alert Type:</label>
                 <select name="alert_type">
-                    <option value="info">Info (Blue)</option>
-                    <option value="warning">Warning (Yellow)</option>
-                    <option value="danger">Critical (Red)</option>
-                    <option value="success">Success (Green)</option>
+                    <option value="info">Info</option>
+                    <option value="warning">Warning</option>
+                    <option value="danger">Critical</option>
+                    <option value="success">Success</option>
                 </select>
 
                 <label>Message:</label>
                 <textarea name="message" rows="5" placeholder="Enter your announcement here..." required></textarea>
 
-                <button type="submit" name="send_alert" class="btn-send">🚀 Send Broadcast</button>
-                <button type="submit" name="stop_alert" class="btn-stop">🛑 Stop Active Alerts</button>
+                <button type="submit" name="send_alert" class="btn-send"> Send Broadcast</button>
+                <button type="submit" name="stop_alert" class="btn-stop"> Stop Active Alerts</button>
             </form>
         </div>
     </div>

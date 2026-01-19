@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <title>Ban or Suspend</title>
+    <title>Ban or Warning</title>
     <link rel="stylesheet" href="../css/admin_ban_warning.css">
 </head>
 <body>
@@ -13,7 +12,6 @@
         <a href="admin_users_details_controller.php">Users Details</a>
         <a href="admin_ban_warning_controller.php" class="active">Ban or Warning</a>
         <a href="admin_alert_controller.php">Send Alert</a>
-        <a href="admin_map_controller.php">Live Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
@@ -25,7 +23,7 @@
         <?php endif; ?>
 
         <div class="form-card">
-            <h3>Ban/Suspend User</h3>
+            <h3>Ban/Warning User</h3>
             <form action="admin_ban_warning_controller.php" method="POST">
                 <label>User ID:</label>
                 <input type="number" name="user_id" value="<?php echo $prefill_id; ?>" placeholder="Enter User ID manually" required>

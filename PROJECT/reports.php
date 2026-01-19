@@ -120,7 +120,6 @@ $result = mysqli_query($conn, $sql);
         ?>
         
        <div class="report-card" style="border-left-color: <?php echo $isResolved ? '#28a745' : '#ffc107'; ?>;">
-            
             <div class="report-header">
                 <div>
                     <strong style="font-size: 1.1rem;">
@@ -129,15 +128,14 @@ $result = mysqli_query($conn, $sql);
                     </strong>
                     <span class="meta-info">
                         Posted by: <strong><?php echo htmlspecialchars($row['reporter_name']); ?></strong> 
-                        (<?php echo htmlspecialchars($row['reporter_email']); ?>)
+                        < <?php echo htmlspecialchars($row['reporter_email']); ?> >
                     </span>
                 </div>
                 <div><?php echo $statusBadge; ?></div>
             </div>
-
             <div class="report-body">
-                <p><strong>📍 Location:</strong> <?php echo htmlspecialchars($location_display); ?></p>
-                <p><strong>📅 Date:</strong> <?php echo date('F j, Y, g:i a', strtotime($row['created_at'])); ?></p>
+                <p><strong> Location:</strong> <?php echo htmlspecialchars($location_display); ?></p>
+                <p><strong> Date:</strong> <?php echo date('F j, Y, g:i a', strtotime($row['created_at'])); ?></p>
                 
                 <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; color: #444; line-height: 1.5;">
                     <?php echo nl2br(htmlspecialchars($row['content'])); ?>
@@ -159,15 +157,15 @@ $result = mysqli_query($conn, $sql);
                     <?php if (!$isResolved): ?>
                     <form action="" method="POST" style="margin:0;">
                         <input type="hidden" name="report_id" value="<?php echo $row['id']; ?>">
-                        <button type="submit" name="approve_report" class="btn-approve">✔ Mark Resolved</button>
+                        <button type="submit" name="approve_report" class="btn-approve"> Mark Resolved</button>
                     </form>
                     <?php else: ?>
-                        <button class="btn-disabled" disabled>✔ Resolved</button>
+                        <button class="btn-disabled" disabled> Resolved</button>
                     <?php endif; ?>
 
                     <form action="" method="POST" style="margin:0;" onsubmit="return confirm('Permanently delete this report?');">
                         <input type="hidden" name="report_id" value="<?php echo $row['id']; ?>">
-                        <button type="submit" name="delete_report" class="btn-delete">🗑️ Delete</button>
+                        <button type="submit" name="delete_report" class="btn-delete"> Delete</button>
                     </form>
                 </div>
             </div>

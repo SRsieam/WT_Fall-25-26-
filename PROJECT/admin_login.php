@@ -1,36 +1,35 @@
 <?php
 session_start();
 include 'db.php';
+
 $error = "";
 
 if (isset($_POST['login_btn'])) {
+
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
-    
     $sql = "SELECT * FROM admin WHERE email='$email' AND password='$password'"; 
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) == 1) {
+
         $row = mysqli_fetch_assoc($result);
-        
-        // --- SETTING ADMIN SESSIONS ---
-        // This is the shield that protects the admin from the auto-logout bug
-        $_SESSION['is_admin_logged_in'] = true; 
-        $_SESSION['admin_id'] = $row['id'];      
+        $_SESSION['is_admin_logged_in'] = true;
         $_SESSION['admin_email'] = $row['email'];
 
         header("Location: dashboard.php");
         exit();
+
     } else {
+
         $error = "Invalid Email or Password";
+
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Admin Login</title>
     <style>
         body {
@@ -128,7 +127,7 @@ if (isset($_POST['login_btn'])) {
         <p>Please login to manage the system</p>
 
         <?php if($error): ?>
-            <div class="error-msg"><?php echo htmlspecialchars($error); ?></div>
+            <div class="error-msg"><?php echo $error; ?></div>
         <?php endif; ?>
 
         <form action="" method="POST">

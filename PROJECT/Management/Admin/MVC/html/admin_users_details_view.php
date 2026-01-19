@@ -13,12 +13,11 @@
         <a href="admin_users_details_controller.php" class="active">Users Details</a>
         <a href="admin_ban_warning_controller.php">Ban or Warning</a>
         <a href="admin_alert_controller.php">Send Alert</a>
-        <a href="admin_map_controller.php">Live Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
     <div class="main-content">
-        <h2>👥 All Users Details</h2>
+        <h2>All Users Details</h2>
         <a href="admin_dashboard_controller.php" class="back-btn">← Back</a>
 
         <table>
@@ -40,8 +39,7 @@
             <tbody>
                 <?php while($row = mysqli_fetch_assoc($result)) { 
                     $pending = $row['total_posts'] - $row['solved_posts'];
-                    
-                    // Display Logic for Role Status
+ 
                     $role = $row['role'];
                     $display_status = '-';
                     $status_class = 'status-dash';

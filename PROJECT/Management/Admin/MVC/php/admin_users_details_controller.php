@@ -2,14 +2,11 @@
 session_start();
 include '../db/db.php';
 
-// Check Admin Login
 if (!isset($_SESSION['is_admin_logged_in'])) {
     header("Location: admin_login_controller.php");
     exit();
 }
 
-// Fetch User Data
-// Joining with posts table to calculate statistics
 $sql = "SELECT 
             u.id as user_id, 
             u.name, 
@@ -33,6 +30,5 @@ if (!$result) {
     die("Query Failed: " . mysqli_error($conn));
 }
 
-// Load the View
 include '../html/admin_users_details_view.php';
 ?>

@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <title>Admin Login</title>
     <link rel="stylesheet" href="../css/admin_login.css">
@@ -17,7 +16,7 @@
         <form action="" method="POST">
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" name="email" placeholder="admin@example.com" required>
+                <input type="email" name="email" placeholder="admin@test.com" required>
             </div>
 
             <div class="form-group">

@@ -1,13 +1,15 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$dbname = "crimealert";
+$conn = mysqli_connect("localhost", "root", "", "crimealert");
 
-$conn = new mysqli($host, $user, $pass, $dbname);
+if (!$conn) {
+    die("Database connection failed");
+}
 
-if ($conn->connect_error) 
-{
-    die("Database connection failed: " . $conn->connect_error);
+function test_input($data) {
+    global $conn;
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return mysqli_real_escape_string($conn, $data);
 }
 ?>

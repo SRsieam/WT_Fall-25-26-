@@ -13,31 +13,17 @@ $prefill_id = "";
 if (isset($_GET['user_id'])) {
     $prefill_id = intval($_GET['user_id']);
 }
-
 if (isset($_POST['ban_user'])) {
     $user_id = intval($_POST['user_id']);
     $action_type = $_POST['action']; 
     
-    // Determine the status string
-    if ($action_type == 'ban') {
-        $status = 'Banned';
-    } elseif ($action_type == 'suspend') {
-        $status = 'Suspended';
-    } elseif ($action_type == 'unban') {
-        $status = 'user'; // Reset to default role
-    }
+    $status = ($action_type == 'ban') ? 'Banned' : 'Suspended';
     
-    // Update the user's role in the database
-    $sql = "UPDATE users SET role='$status' WHERE id=$user_id";
-    
+    $sql = "UPDATE users SET status='$status' WHERE user_id=$user_id";
     if(mysqli_query($conn, $sql)) {
-        if ($status == 'user') {
-            $msg = "User #$user_id is now Active (Unbanned).";
-        } else {
-            $msg = "User #$user_id status updated to: $status";
-        }
+        $msg = "User #$user_id has been updated to: $status";
     } else {
-        $msg = "Error updating user: " . mysqli_error($conn);
+        $msg = "Error updating user.";
     }
 }
 ?>
@@ -117,7 +103,7 @@ if (isset($_POST['ban_user'])) {
         <div class="sidebar-header">Admin Panel</div>
         <a href="dashboard.php">Dashboard</a>
         <a href="reports.php">Reports</a>
-        <a href="users_details.php">Users Details</a>
+        <a href="users.php">Users Details</a>
         <a href="ban_warning.php" class="active">Ban or Warning</a>
         <a href="alert.php">Send Alert</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
@@ -131,7 +117,7 @@ if (isset($_POST['ban_user'])) {
         <?php endif; ?>
 
         <div class="form-card">
-            <h3>Ban/Suspend User</h3>
+            <h3>Ban A User</h3>
             <form action="" method="POST">
                 <label>User ID:</label>
                 <input type="number" name="user_id" value="<?php echo $prefill_id; ?>" placeholder="Enter User ID manually" required>
@@ -140,13 +126,13 @@ if (isset($_POST['ban_user'])) {
                 <select name="action">
                     <option value="ban">Ban User Permanently</option>
                     <option value="suspend">Suspend for 7 Days</option>
-                    <option value="unban">Unban / Activate User</option>
                 </select>
 
                 <button type="submit" name="ban_user" class="btn-danger">Apply Action</button>
             </form>
         </div>
     </div>
+
 
 </body>
 </html>

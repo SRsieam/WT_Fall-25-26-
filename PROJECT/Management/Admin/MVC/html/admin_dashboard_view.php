@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../css/admin_dashboard.css">
@@ -13,7 +12,6 @@
         <a href="admin_users_details_controller.php"> Users Details</a>
         <a href="admin_ban_warning_controller.php"> Ban or Warning</a>
         <a href="admin_alert_controller.php"> Send Alert</a>
-        <a href="admin_map_controller.php"> Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
  
@@ -37,7 +35,7 @@
                         $statusClass = ($row['status'] == 'Resolved') ? 'status-resolved' : 'status-pending';
                     ?>
                     <tr>
-                        <td>#<?php echo $row['id']; ?></td>
+                        <td><?php echo $row['id']; ?></td>
                         <td><?php echo htmlspecialchars($row['reporter_name']); ?></td>
                        
                         <td><?php echo htmlspecialchars(substr($row['content'], 0, 50)) . '...'; ?></td>

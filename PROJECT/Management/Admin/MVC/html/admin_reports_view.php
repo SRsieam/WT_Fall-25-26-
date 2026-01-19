@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <title>Manage All Reports</title>
+    <title>All Reports</title>
     <link rel="stylesheet" href="../css/admin_reports.css">
 </head>
 <body>
@@ -13,7 +12,6 @@
         <a href="admin_users_details_controller.php">Users Details</a>
         <a href="admin_ban_warning_controller.php">Ban or Warning</a>
         <a href="admin_alert_controller.php">Send Alert</a>
-        <a href="admin_map_controller.php">Live Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
     </div>
 
@@ -48,24 +46,18 @@
             </div>
 
             <div class="report-body">
-                <p><strong>📍 Location:</strong> <?php echo htmlspecialchars($location_display); ?></p>
-                <p><strong>📅 Date:</strong> <?php echo date('F j, Y, g:i a', strtotime($row['created_at'])); ?></p>
+                <p><strong> Location:</strong> <?php echo htmlspecialchars($location_display); ?></p>
+                <p><strong> Date:</strong> <?php echo date('F j, Y, g:i a', strtotime($row['created_at'])); ?></p>
                 
                 <div style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; color: #444; line-height: 1.5;">
                     <?php echo nl2br(htmlspecialchars($row['content'])); ?>
                 </div>
 
-                <td>
-    <?php if (!empty($row["image"])): ?>
-        <a href="../../../User/MVC/uploads/<?php echo $row['image']; ?>" 
-           target="_blank" 
-           style="color: #007bff; font-weight: bold; text-decoration: none;">
-           🖼️ View Uploaded Picture
-        </a>
-    <?php else: ?>
-        <span style="color: #999; font-size: 12px;">No Evidence Provided</span>
-    <?php endif; ?>
-</td>
+                <?php if(!empty($row['image'])): ?>
+                    <div style="margin-top:10px;">
+                        <a href="../../uploads/<?php echo $row['image']; ?>" target="_blank" style="color:#007bff; text-decoration:none;">📷 View Attached Image</a>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="report-footer">
