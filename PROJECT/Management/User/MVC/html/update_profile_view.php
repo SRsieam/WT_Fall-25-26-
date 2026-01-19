@@ -73,7 +73,6 @@
 </div>
 
 <script>
-// All JavaScript functions remain "same to same" from your raw code
 function loadDistricts() {
     var div = document.getElementById("division").value;
     var dist = document.getElementById("district");

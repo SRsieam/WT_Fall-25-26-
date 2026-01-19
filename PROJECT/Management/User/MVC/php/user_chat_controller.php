@@ -5,9 +5,8 @@ include "../db/db_connection.php";
 
 $user_id = $_SESSION["user_id"] ?? 0;
 
-// Handle POST request: Sending a new message
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['message'])) {
-    // Sanitize message text using the existing mysqli escape logic
+
     $msg_text = mysqli_real_escape_string($conn, trim($_POST['message']));
     
     if (!empty($msg_text) && $user_id != 0) {
@@ -32,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
         $data[] = $row;
     }
     
-    // Return the chat data in JSON format for the dashboard
     header('Content-Type: application/json');
     echo json_encode($data); 
     exit;
