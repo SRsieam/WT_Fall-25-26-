@@ -1,6 +1,11 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "registration_db");
+$host = "localhost";
+$user = "root";
+$pass = "";
+$dbname = "registration_db";
+$conn = mysqli_connect($host, $user, $pass, $dbname);
 
 if (!$conn) {
-    die("Database connection failed");
+    die("Connect lost" . mysqli_connect_error());
 }
+?>

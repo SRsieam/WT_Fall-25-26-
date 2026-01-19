@@ -208,7 +208,6 @@ function loadDistricts() {
         list = ["Mymensingh", "Jamalpur", "Netrokona", "Sherpur"];
     }
 
-    // Populate the district dropdown dynamically
     for (var i = 0; i < list.length; i++) {
         var opt = document.createElement("option");
         opt.value = list[i];

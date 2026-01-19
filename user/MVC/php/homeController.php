@@ -6,7 +6,7 @@ $msg = "";
 
 $user_id   = $_SESSION["user_id"] ?? 0;
 $user_name = $_SESSION["user_name"] ?? "";
-$posts = mysqli_query(...);
+
 
 if ($user_id == 0) {
     header("Location: ../html/login.php");

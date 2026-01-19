@@ -2,11 +2,13 @@
 session_start();
 include "db.php"; 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
     $email = mysqli_real_escape_index($conn, trim($_POST["email"]));
     $password = trim($_POST["password"]);
 
-    if (empty($email) || empty($password)) {
+    if (empty($email) || empty($password)) 
+    {
         echo "Please enter email and password";
     } else {
  
@@ -14,11 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = mysqli_query($conn, $sql);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            if (password_verify($password, $row["password"])) {
+            if (password_verify($password, $row["password"])) 
+            {
                 $_SESSION["user_id"] = $row["id"];
                 $_SESSION["user_name"] = $row["name"];
                 echo "success";
-            } else {
+            } else 
+            {
                 echo "Incorrect password";
             }
         } else {
@@ -27,7 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-function mysqli_real_escape_index($conn, $data) {
+function mysqli_real_escape_index($conn, $data) 
+{
     return mysqli_real_escape_string($conn, $data);
 }
 ?>

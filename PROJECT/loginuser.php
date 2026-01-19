@@ -5,22 +5,26 @@ include "db.php";
 $msg = "";
 $email = "";
 
-function text_input($data) {
+function text_input($data) 
+{
     return trim($data);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
     $email = text_input($_POST["email"]);
     $password = text_input($_POST["password"]);
 
     if (empty($email) || empty($password)) {
         $msg = "Please enter email and password";
-    } else {
+    } else 
+    {
         $sql = "SELECT * FROM users WHERE email = '$email'";
         $result = mysqli_query($conn, $sql);
 
         if ($row = mysqli_fetch_assoc($result)) {
-            if (password_verify($password, $row["password"])) {
+            if (password_verify($password, $row["password"])) 
+                {
                 $_SESSION["user_id"] = $row["id"];
                 $_SESSION["user_name"] = $row["name"];
                 header("Location: homepage.php");
@@ -54,7 +58,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
         }
 
-        .login-card {
+        .login-card 
+        {
 
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
@@ -72,12 +77,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             letter-spacing: 1px;
         }
 
-        .input-group {
+        .input-group 
+        {
             margin-bottom: 20px;
             text-align: left;
         }
 
-        label {
+        label 
+        {
             display: block;
             margin-bottom: 5px;
             color: #555;
@@ -85,7 +92,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-weight: 600;
         }
 
-        input { 
+        input 
+        { 
             width: 100%; 
             padding: 12px; 
             border: 1px solid #ccc; 
@@ -96,13 +104,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background: rgba(255, 255, 255, 0.8);
         }
 
-        input:focus {
+        input:focus 
+        {
             outline: none;
             border-color: #e74c3c;
             box-shadow: 0 0 8px rgba(231, 76, 60, 0.2);
         }
 
-        .btn-login { 
+        .btn-login 
+        { 
             width: 100%; 
             padding: 12px; 
             background: #e74c3c; 
@@ -117,11 +127,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             text-transform: uppercase;
         }
 
-        .btn-login:hover {
+        .btn-login:hover 
+        {
             background: #c0392b;
         }
 
-        .error-box {
+        .error-box 
+        {
             color: #d32f2f;
             background: #ffebee;
             padding: 10px;
@@ -132,19 +144,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: <?php echo empty($msg) ? 'none' : 'block'; ?>;
         }
 
-        .footer-links {
+        .footer-links 
+        {
             margin-top: 25px;
             font-size: 14px;
             color: #666;
         }
 
-        .footer-links a {
+        .footer-links a 
+        {
             color: #e74c3c;
             text-decoration: none;
             font-weight: bold;
         }
 
-        .footer-links a:hover {
+        .footer-links a:hover 
+        {
             text-decoration: underline;
         }
     </style>
