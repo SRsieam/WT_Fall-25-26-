@@ -1,0 +1,25 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url("../images/bg_rg.png") no-repeat center center fixed;
+    background-size: cover;
+    display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+}
+.form-box {
+    background: #ffffff;
+    padding: 30px; width: 450px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    margin: 20px 0;
+}
+h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; margin-bottom: 20px; }
+.input-group { margin-bottom: 15px; }
+input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+input:focus, select:focus { border-color: #e74c3c; outline: none; }
+.status-msg { padding: 10px; text-align: center; border-radius: 5px; margin-bottom: 15px; font-weight: bold; font-size: 13px; }
+.error { background: #fdecea; color: #af2b2b; border: 1px solid #f5c6cb; }
+.success { background: #e6f4ea; color: #1e7e34; border: 1px solid #c3e6cb; }
+button { width: 100%; padding: 14px; background: #e74c3c; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+button:hover { background: #c0392b; }
+.footer { text-align: center; margin-top: 15px; font-size: 14px; }
+.footer a { color: #3498db; text-decoration: none; font-weight: bold; }
+.security-box { background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px dashed #ccc; }
+.sec-label { font-size: 12px; color: #e74c3c; font-weight: bold; margin-bottom: 5px; display: block; }
+.dob-label { font-size: 11px; color: #777; margin-left: 2px; }
