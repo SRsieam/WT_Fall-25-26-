@@ -12,7 +12,9 @@
         <a href="admin_users_details_controller.php"> Users Details</a>
         <a href="admin_ban_warning_controller.php"> Ban or Warning</a>
         <a href="admin_alert_controller.php"> Send Alert</a>
+        <a href="admin_map_controller.php" class="<?php echo (basename($_SERVER['PHP_SELF']) == 'admin_map_controller.php') ? 'active' : ''; ?>">Live Map</a>
         <a href="admin_logout.php" style="margin-top:auto; background:#d9534f; text-align:center;">Logout</a>
+        
     </div>
  
     <div class="main-content">

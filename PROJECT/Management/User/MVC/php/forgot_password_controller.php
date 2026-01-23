@@ -1,64 +1,54 @@
 <?php
 session_start();
-include "../db/db_connection.php"; 
+include "../db/db_connection.php"; //
 
-mysqli_set_charset($conn, "utf8mb4");
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../libs/PHPMailer/src/Exception.php';
+require '../libs/PHPMailer/src/PHPMailer.php';
+require '../libs/PHPMailer/src/SMTP.php';
 
 $msg = "";
-$step = 1; 
-$user_id_to_reset = 0;
 
-if (isset($_POST['verify_btn'])) {
+if (isset($_POST['send_code'])) {
     $email = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $selected_question = trim($_POST['security_question']); 
-    $user_answer = trim($_POST['security_answer']);
+    
+    // Verify if email exists in your users table
+    $query = mysqli_query($conn, "SELECT id FROM users WHERE email='$email'");
+    
+    if (mysqli_num_rows($query) > 0) {
+        $otp = rand(100000, 999999); // Generate 6-digit code
+        $_SESSION['reset_otp'] = $otp;
+        $_SESSION['reset_email'] = $email;
 
-    $sql = "SELECT id, security_question, security_answer FROM users WHERE email='$email'";
-    $res = mysqli_query($conn, $sql);
+        $mail = new PHPMailer(true);
+        try {
+            // SMTP Settings for Gmail
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'crimealertaiub@gmail.com'; 
+            $mail->Password   = 'ofhg zady ukvt brne'; // 16-digit Google App Password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
 
-    if ($row = mysqli_fetch_assoc($res)) {
-        $db_question = trim($row['security_question']);
-        $db_answer = trim($row['security_answer']);
+            $mail->setFrom('crimealertaiub@gmail.com', 'Crime Alert System');
+            $mail->addAddress($email);
 
-        if (strcasecmp($db_question, $selected_question) !== 0) {
-            $msg = "The security question selected does not match our records.";
-        } 
-        else if (password_verify($user_answer, $db_answer)) {
-            $step = 2;
-            $user_id_to_reset = $row['id'];
-        } else {
-            $msg = "Incorrect security answer.";
-        }
-    } else {
-        $msg = "No account found with that email address.";
-    }
-}
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset Verification Code';
+            $mail->Body    = "Your 6-digit verification code is: <b>$otp</b>";
 
-
-if (isset($_POST['reset_btn'])) {
-    $uid = mysqli_real_escape_string($conn, $_POST['uid']);
-    $new_pass = $_POST['new_password'];
-    $c_new_pass = $_POST['confirm_new_password'];
-
-    if (strlen($new_pass) < 6 || !preg_match("/[@$!%*#?&]/", $new_pass)) {
-        $msg = "Password must be at least 6 characters with a special symbol.";
-        $step = 2;
-        $user_id_to_reset = $uid;
-    } else if ($new_pass !== $c_new_pass) {
-        $msg = "Passwords do not match.";
-        $step = 2;
-        $user_id_to_reset = $uid;
-    } else {
-        $hashed_pass = password_hash($new_pass, PASSWORD_DEFAULT);
-        if (mysqli_query($conn, "UPDATE users SET password='$hashed_pass' WHERE id='$uid'")) {
-            header("Location: login_controller.php?msg=Password reset successful!");
+            $mail->send();
+            header("Location: verify_otp_controller.php"); // Redirect to next step
             exit();
-        } else {
-            $msg = "Database error. Could not reset password.";
+        } catch (Exception $e) {
+            $msg = "Mail could not be sent. Error: {$mail->ErrorInfo}";
         }
+    } else {
+        $msg = "No account found with this email.";
     }
 }
-
-
-include "../html/forgot_password_view.php";
+include "../html/forgot_password_view.php"; //
 ?>

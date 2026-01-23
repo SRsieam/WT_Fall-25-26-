@@ -15,9 +15,9 @@
 
         <a href="../../../Admin/MVC/php/admin_login_controller.php" class="btn btn-admin">Admin Login</a>
 
-        <a href="login_controller.php" class="btn btn-user">User Login</a>
+        <a href="../php/login_controller.php" class="btn btn-user">User Login</a>
 
-        <a href="registration_controller.php" class="btn btn-new">New User Registration</a>
+        <a href="../php/registration_controller.php" class="btn btn-new">New User Registration</a>
     </div>
 
 </body>
